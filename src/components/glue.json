@@ -1,0 +1,12 @@
+[
+  { "rewardtoken": "[LQDR]", "cgname": "liquiddriver" },
+  { "rewardtoken": "[WFTM]", "cgname": "wrapped-fantom" },
+  { "rewardtoken": "[BOO]", "cgname": "spookyswap" },
+  { "rewardtoken": "[LINSPIRIT]", "cgname": "linspirit" },
+  { "rewardtoken": "[SPELL]", "cgname": "spell-token" },
+  { "rewardtoken": "[BEETS]", "cgname": "beethoven-x" },
+  { "rewardtoken": "[xBOO]", "cgname": "boo-mirrorworld" },
+  { "rewardtoken": "[HND]", "cgname": "hundred-finance" },
+  { "rewardtoken": "[liHND]", "cgname": "unknown" },
+  { "rewardtoken": "[DEUS]", "cgname": "deus-finance" }
+]

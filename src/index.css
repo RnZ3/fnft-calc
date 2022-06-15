@@ -1,0 +1,64 @@
+body {
+  margin: 30px;
+  font-family: monospace;
+  font-size: 1rem;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #222222;
+  color: #cccccc;
+}
+
+table { 
+  border-spacing: 0px;
+  border-collapse: separate;
+  background: #222222;
+}
+
+tr.tb {
+  background: #333333;
+  color: #ffa800;
+}
+
+.green {
+  color: #00ff54;
+}
+
+.orange {
+  color: #ffa800;
+}
+
+td { 
+  padding: 10px;
+}
+
+p.middle {
+  vertical-align: middle;
+  display: inline;
+}
+
+div.container {
+  margin-bottom: 30px;
+}
+
+.hidden {
+  display: none;
+}
+
+img.icon-v {
+  vertical-align: middle;
+  height: 24px;
+}
+
+.lqdrblue {
+  color: #4dd9f6;
+}
+
+small {
+  font-size: 0.7rem;
+  color: #eeeeee;
+}
+
+h1 {
+  font-size: 1.7rem;
+}
+
