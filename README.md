@@ -2,7 +2,7 @@
 
 This App calculates $ prices for rewards inside a Revest/Liquiddriver xLQDR FNFT.
 
-
+------------
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
