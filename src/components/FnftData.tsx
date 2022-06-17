@@ -1,6 +1,8 @@
 import React, { useState, useEffect }  from 'react';
+import useTimer from "hooks/useTimer"
 import priceMap from "components/glue.json";
 import { fnftData, finalArray } from "components/interface";
+import { ghLogo, ghLogoAlt } from "img/gh-mark"
 
 var fnftId:number = -1
 const rewardToken  = 'liquiddriver,beethoven-x,spell-token,deus-finance,wrapped-fantom,spookyswap,linspirit,boo-mirrorworld,hundred-finance'
@@ -9,30 +11,20 @@ var fnftUrl = 'https://lambda.revest.finance/api/getUpdatedFNFT/' + fnftId + '-2
 var rewardsAvailable:boolean = false
 var lqdrBalance:number = 0
 var fnftRewards:any = ""
-const REFRESH_INTERVAL = 120000
+const refreshInterval = 120000
 
 export const ContentMain = (props:any) => {
 
   let fnftId = props.formData
   let lastFnft = props.lastFnft
   let submitBtn = props.submitBtn
-
+  const refresh = useTimer(refreshInterval)
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLoaded1, setIsLoaded1] = useState(false);
   const [isLoaded2, setIsLoaded2] = useState(false);
   const [coins, setCoins] = useState([]);
   const [rewards, setRewards] = useState([]);
-  const [refresh, setRefresh] = useState(new Date());
-
-  useEffect(() => {
-    var timerID = setInterval(() => timer(), REFRESH_INTERVAL)
-    return () => clearInterval(timerID)
-  }, [ ])
-
-  function timer() {
-      setRefresh(new Date())
-  }
 
   if(fnftId) {
     fnftUrl = 'https://lambda.revest.finance/api/getUpdatedFNFT/' + fnftId + '-250'
@@ -213,7 +205,13 @@ export const ContentMain = (props:any) => {
             </tbody>
           </table>
         </div>
-        <p><small>thanks revest.finance, liquiddriver.finance, coingecko.com, vercel.com, ftm.tools -- NFA, DYOR</small></p>
+        <p>
+          <small>
+            NFA, DYOR -- thanks revest.finance, liquiddriver.finance, coingecko.com, vercel.com, github.com, ftm.tools <br />
+            Like it? donate: 0x196d8a3512b0c2c9c5b8d6466d943bc278d18659 -- <a href="https://github.com/RnZ3/fnft-calc">
+            source code <img src={ghLogo} className="smaller" alt={ghLogoAlt} /></a>
+          </small>
+        </p>
       </div>
      </>
     );
