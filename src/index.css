@@ -49,6 +49,16 @@ img.icon-v {
   height: 24px;
 }
 
+img.smaller {
+  vertical-align: middle;
+  height: 12px;
+}
+
+img.smaller:hover {
+  vertical-align: top;
+  height: 36px;
+}
+
 .lqdrblue {
   color: #4dd9f6;
 }
@@ -60,5 +70,14 @@ small {
 
 h1 {
   font-size: 1.7rem;
+}
+
+a:link, a:visited {
+  text-decoration: none;
+  color: inherit;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
