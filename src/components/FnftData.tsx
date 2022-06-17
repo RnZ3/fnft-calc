@@ -1,4 +1,5 @@
 import React, { useState, useEffect }  from 'react';
+import useTimer from "hooks/useTimer"
 import priceMap from "components/glue.json";
 import { fnftData, finalArray } from "components/interface";
 
@@ -9,30 +10,20 @@ var fnftUrl = 'https://lambda.revest.finance/api/getUpdatedFNFT/' + fnftId + '-2
 var rewardsAvailable:boolean = false
 var lqdrBalance:number = 0
 var fnftRewards:any = ""
-const REFRESH_INTERVAL = 120000
+const refreshInterval = 120000
 
 export const ContentMain = (props:any) => {
 
   let fnftId = props.formData
   let lastFnft = props.lastFnft
   let submitBtn = props.submitBtn
-
+  const refresh = useTimer(refreshInterval)
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLoaded1, setIsLoaded1] = useState(false);
   const [isLoaded2, setIsLoaded2] = useState(false);
   const [coins, setCoins] = useState([]);
   const [rewards, setRewards] = useState([]);
-  const [refresh, setRefresh] = useState(new Date());
-
-  useEffect(() => {
-    var timerID = setInterval(() => timer(), REFRESH_INTERVAL)
-    return () => clearInterval(timerID)
-  }, [ ])
-
-  function timer() {
-      setRefresh(new Date())
-  }
 
   if(fnftId) {
     fnftUrl = 'https://lambda.revest.finance/api/getUpdatedFNFT/' + fnftId + '-250'
