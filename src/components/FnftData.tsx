@@ -154,7 +154,11 @@ export const ContentMain = (props:any) => {
           coins.forEach(function (c:any) {
             if (c.id === m.cgname) {
               if( ! (t.amount === 0)) {
-                var data:finalArray = { token: t.token, cgname: m.cgname, amount: t.amount, price: c.current_price, image: c.image }
+                var data:finalArray =
+                  {
+                    value: (t.amount * c.current_price), token: t.token, cgname: m.cgname,
+                    amount: t.amount, price: c.current_price, image: c.image
+                  }
                 total += (t.amount * c.current_price)
                 finalData.push(data)
               }
@@ -164,6 +168,7 @@ export const ContentMain = (props:any) => {
       })
     })
 
+console.log(finalData)
     return (
      <>
       <div className="wrapper">
@@ -192,7 +197,7 @@ export const ContentMain = (props:any) => {
                   <td>{r.cgname}</td>
                   <td>{r.amount}</td>
                   <td>{r.price}</td>
-                  <td>{r.price * r.amount}</td>
+                  <td>{r.value}</td>
                 </tr>
               ))}
                 <tr className="tb">
