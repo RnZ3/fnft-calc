@@ -20,8 +20,8 @@ export const ContentMain = (props:any) => {
   const refresh = useTimer(refreshInterval)
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [coinsLoadad, setCoinsLoadad] = useState(false);
-  const [fnftLoaded, setFnftLoadad] = useState(false);
+  const [coinsLoaded, setCoinsLoaded] = useState(false);
+  const [fnftLoaded, setFnftLoaded] = useState(false);
   const [coins, setCoins] = useState([]);
   const [rewards, setRewards] = useState([]);
 
@@ -34,13 +34,13 @@ export const ContentMain = (props:any) => {
       const res = await fetch(cgUrl)
       const json = await res.json();
       setCoins(json);
-      setCoinsLoadad(true);
+      setCoinsLoaded(true);
     }
     const fetchFnft = async () => {
       const res = await fetch(fnftUrl)
       const json = await res.json();
       setRewards(json);
-      setFnftLoadad(true);
+      setFnftLoaded(true);
     }
     if(fnftId) {
       fetchCoins()
@@ -53,7 +53,7 @@ export const ContentMain = (props:any) => {
   } else if (!fnftId) {
       return <div>Enter ID  (0 - {lastFnft})</div>;
   } else if ( !isLoaded ) {
-    if ((coinsLoadad) && (fnftLoaded)) {
+    if ((coinsLoaded) && (fnftLoaded)) {
       setIsLoaded(true);
     }
     return <div>Loading...</div>;
