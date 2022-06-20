@@ -9,6 +9,7 @@ export interface fnftData {
 }
 
 export interface finalArray {
+  value:  number;
   token:  string;
   cgname: string;
   amount: number;
