@@ -1,14 +1,13 @@
 import React from 'react'
-import { useState, useEffect } from 'react';
-import { ethers } from "ethers";
+import { useState } from 'react';
+import { useFetchLastFnftId } from "hooks/useFetchLastFnftId"
 import { ContentMain } from "components/FnftData"
-import { fnft_address, fnft_abi } from "contracts/fnftContract"
 
-export default function Parent() {
+export function App() {
   const [data, setData] = useState('')
   const [id, setId] = useState('')
-  const [lastFnft, setLastFnft] = useState<number>()
   const [submitBtn, setsubmitBtn] = useState(true)
+  const lastFnft = useFetchLastFnftId()
 
   const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
     // Preventing the page from reloading
@@ -16,22 +15,6 @@ export default function Parent() {
     setData(id);
     setsubmitBtn(!submitBtn)
   }
-
-  useEffect(() => {
-    const fetchLastFnftId = async () => {
-      const provider = new ethers.providers.JsonRpcProvider(
-        "https://rpc.ftm.tools"
-      );
-      const contract = new ethers.Contract(
-        fnft_address,
-        fnft_abi,
-        provider
-      );
-      const fnftsCreated = await contract.fnftsCreated();
-      setLastFnft(parseInt(fnftsCreated) -1)
-    }
-    fetchLastFnftId()
-  }, []) 
 
   return (
     <>

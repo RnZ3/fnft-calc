@@ -4,10 +4,8 @@ import priceMap from "components/glue.json";
 import { fnftData, finalArray } from "components/interface";
 import { ghLogo, ghLogoAlt } from "img/gh-mark"
 
-var fnftId:number = -1
 const rewardToken  = 'liquiddriver,beethoven-x,spell-token,deus-finance,wrapped-fantom,spookyswap,linspirit,boo-mirrorworld,hundred-finance'
 const cgUrl = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=' + rewardToken
-var fnftUrl = 'https://lambda.revest.finance/api/getUpdatedFNFT/' + fnftId + '-250'
 var rewardsAvailable:boolean = false
 var lqdrBalance:number = 0
 var fnftRewards:any = ""
@@ -15,14 +13,15 @@ const refreshInterval = 120000
 
 export const ContentMain = (props:any) => {
 
+  let fnftUrl:string = ""
   let fnftId = props.formData
   let lastFnft = props.lastFnft
   let submitBtn = props.submitBtn
   const refresh = useTimer(refreshInterval)
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isLoaded1, setIsLoaded1] = useState(false);
-  const [isLoaded2, setIsLoaded2] = useState(false);
+  const [coinsLoadad, setCoinsLoadad] = useState(false);
+  const [fnftLoaded, setFnftLoadad] = useState(false);
   const [coins, setCoins] = useState([]);
   const [rewards, setRewards] = useState([]);
 
@@ -31,40 +30,32 @@ export const ContentMain = (props:any) => {
   }
 
   useEffect(() => {
-    const fetchData1 = async () => {
+    const fetchCoins = async () => {
       const res = await fetch(cgUrl)
       const json = await res.json();
       setCoins(json);
-      setIsLoaded1(true);
+      setCoinsLoadad(true);
     }
-    setIsLoaded1(false);
-    if(fnftId) {
-      fetchData1()
-    }
-  }, [ fnftId, submitBtn, refresh ])
-
-  useEffect(() => {
-    const fetchData2 = async () => {
+    const fetchFnft = async () => {
       const res = await fetch(fnftUrl)
       const json = await res.json();
       setRewards(json);
-      setIsLoaded2(true);
+      setFnftLoadad(true);
     }
-    setIsLoaded2(false);
     if(fnftId) {
-      fetchData2()
+      fetchCoins()
+      fetchFnft()
     }
-  }, [ fnftId, submitBtn, refresh ])
+  }, [ fnftId, fnftUrl, submitBtn, refresh ])
 
   if (error) {
       return <div>Error: {error['message']}</div>;
   } else if (!fnftId) {
       return <div>Enter ID  (0 - {lastFnft})</div>;
   } else if ( !isLoaded ) {
-    if ((isLoaded1) && (isLoaded2)) {
+    if ((coinsLoadad) && (fnftLoaded)) {
       setIsLoaded(true);
     }
-    console.log("loaded: ",isLoaded, fnftId)
     return <div>Loading...</div>;
   } else {
 
@@ -168,7 +159,6 @@ export const ContentMain = (props:any) => {
       })
     })
 
-console.log(finalData)
     return (
      <>
       <div className="wrapper">
