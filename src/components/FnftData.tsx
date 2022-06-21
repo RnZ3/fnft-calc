@@ -9,7 +9,7 @@ const cgUrl = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&id
 var rewardsAvailable:boolean = false
 var lqdrBalance:number = 0
 var fnftRewards:any = ""
-const refreshInterval = 120000
+var refreshInterval:(number|null) = 120000  // ms or null
 
 export const ContentMain = (props:any) => {
 

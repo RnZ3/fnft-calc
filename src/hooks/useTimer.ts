@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react"
+import React, { useState, useEffect } from 'react';
 
-export default function useTimer(interval:number)  {
+export default function useTimer(interval:number|null)  {
   const [refresh, setRefresh] = useState(new Date())
   useEffect(() => {
-    var timerID = setInterval(() => timer(), interval)
-    return () => clearInterval(timerID)
-  } )
+    if(interval !== null) {
+      var timerID = setInterval(() => timer(), interval)
+      return () => clearInterval(timerID)
+    }
+  }, [ interval ] )
 
   function timer() {
       setRefresh(new Date())
