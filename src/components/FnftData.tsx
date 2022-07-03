@@ -1,5 +1,6 @@
 import React, { useState, useEffect }  from 'react';
 import useTimer from "hooks/useTimer"
+import Spinner from "components/Spinner"
 import priceMap from "components/glue.json";
 import { fnftData, finalArray } from "components/interface";
 import { ghLogo, ghLogoAlt } from "img/gh-mark"
@@ -9,7 +10,7 @@ const cgUrl = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&id
 var rewardsAvailable:boolean = false
 var lqdrBalance:number = 0
 var fnftRewards:any = ""
-var refreshInterval:(number|null) = 120000  // ms or null
+var refreshInterval:(number|null) = null  // ms or null
 
 export const ContentMain = (props:any) => {
 
@@ -43,6 +44,9 @@ export const ContentMain = (props:any) => {
       setFnftLoaded(true);
     }
     if(fnftId) {
+      setIsLoaded(false)
+      setFnftLoaded(false)
+      setCoinsLoaded(false)
       fetchCoins()
       fetchFnft()
     }
@@ -54,9 +58,9 @@ export const ContentMain = (props:any) => {
       return <div>Enter ID  (0 - {lastFnft})</div>;
   } else if ( !isLoaded ) {
     if ((coinsLoaded) && (fnftLoaded)) {
-      setIsLoaded(true);
+      setIsLoaded(true)
     }
-    return <div>Loading...</div>;
+    return <div><Spinner/></div>;
   } else {
 
     fnftRewards = JSON.parse(JSON.stringify(rewards))
