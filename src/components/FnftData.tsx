@@ -20,6 +20,7 @@ export const ContentMain = (props:any) => {
   let submitBtn = props.submitBtn
   const refresh = useTimer(refreshInterval)
   const [error, setError] = useState(null);
+  const [lastFnftId, setLastFnftId] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
   const [coinsLoaded, setCoinsLoaded] = useState(false);
   const [fnftLoaded, setFnftLoaded] = useState(false);
@@ -44,11 +45,14 @@ export const ContentMain = (props:any) => {
       setFnftLoaded(true);
     }
     if(fnftId) {
-      setIsLoaded(false)
+      if(fnftId !== lastFnftId) {
+        setIsLoaded(false)
+      }
       setFnftLoaded(false)
       setCoinsLoaded(false)
       fetchCoins()
       fetchFnft()
+      setLastFnftId(fnftId)
     }
   }, [ fnftId, fnftUrl, submitBtn, refresh ])
 
