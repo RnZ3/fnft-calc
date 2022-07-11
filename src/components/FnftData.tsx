@@ -15,6 +15,7 @@ var refreshInterval:(number|null) = null  // ms or null
 export const ContentMain = (props:any) => {
 
   let fnftUrl:string = ""
+  let revestUrl:string = ""
   let fnftId = props.formData
   let lastFnft = props.lastFnft
   let submitBtn = props.submitBtn
@@ -29,6 +30,7 @@ export const ContentMain = (props:any) => {
 
   if(fnftId) {
     fnftUrl = 'https://lambda.revest.finance/api/getUpdatedFNFT/' + fnftId + '-250'
+    revestUrl = 'https://app.revest.finance/?chainId=250&id=' + fnftId
   }
 
   useEffect(() => {
@@ -170,8 +172,12 @@ export const ContentMain = (props:any) => {
     return (
      <>
       <div className="wrapper">
-        <p>FNFT ID: <span className={(lqdrLocked === "locked") ? "orange" : "green"}>{fnftId}</span>{' '}
-            ({lqdrLocked} {'->'} {lqdrTimeUTC} ({days} days))</p>
+        <p>FNFT ID:{' '}
+          <span className={(lqdrLocked === "locked") ? "orange" : "green"}>{fnftId}</span>{' '}
+          ({lqdrLocked} {'->'} {lqdrTimeUTC} ({days} days)) {' '}
+          <small> <span className={(lqdrLocked === "locked") ? "orange" : "green"}>
+          <a href={revestUrl} target="_blank" rel="noopener">[extend/claim {fnftId}]</a> </span> </small>
+        </p>
         <p>LQDR Balance: 
             <img className="icon-v" src={image} alt="linked from metadata"/>
             <span className="lqdrblue">{ (lqdrBalance === -1) ? "NaN" : lqdrBalance } </span>{' '}
@@ -184,18 +190,18 @@ export const ContentMain = (props:any) => {
               <tr className="tb">
                 <td colSpan={2}>Token</td>
                 <td>CG Id</td>
-                <td>Amount</td>
-                <td>$ Price</td>
-                <td>$ Value</td>
+                <td align="right">Amount</td>
+                <td align="right">$ Price</td>
+                <td align="right">$ Value</td>
               </tr>
               {finalData.map((r:any, i:number) => (
                 <tr key={i}>
                   <td><img className="icon-v" src={r.image} alt="linked from metadata" /></td>
                   <td>{r.token}</td>
                   <td>{r.cgname}</td>
-                  <td>{r.amount}</td>
-                  <td>{r.price}</td>
-                  <td>{r.value}</td>
+                  <td align="right">{r.amount.toFixed(9)}</td>
+                  <td align="right">{r.price}</td>
+                  <td align="right">{r.value.toFixed(9)}</td>
                 </tr>
               ))}
                 <tr className="tb">
@@ -203,7 +209,7 @@ export const ContentMain = (props:any) => {
                   </td>
                   <td> </td>
                   <td>Total:</td>
-                  <td>{total}</td>
+                  <td align="right">{total.toFixed(9)}</td>
                 </tr>
             </tbody>
           </table>
