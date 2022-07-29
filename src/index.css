@@ -36,12 +36,23 @@ p.middle {
   display: inline;
 }
 
+p.warning {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ff3300;
+}
+
 div.container {
   margin-bottom: 30px;
 }
 
 .hidden {
   display: none;
+}
+
+img.icon-f {
+  vertical-align: middle;
+  height: 44px;
 }
 
 img.icon-v {
