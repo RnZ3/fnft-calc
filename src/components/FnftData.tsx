@@ -28,6 +28,7 @@ export const ContentMain = (props: any) => {
   let apiRevestUrl: string = "";
   let lastFnft = props.lastFnft;
   let submitBtn = props.submitBtn;
+  let salesArr:[]=[]
   const refresh = useTimer(refreshInterval);
   const [error, setError] = useState(null);
   const [lastFnftId, setLastFnftId] = useState("");
@@ -35,7 +36,7 @@ export const ContentMain = (props: any) => {
   const [coinsLoaded, setCoinsLoaded] = useState(false);
   const [fnftLoaded, setFnftLoaded] = useState(false);
   const [metaLoaded, setMetaLoaded] = useState(false);
-  const [checkPs, setCheckPs] = useState(true);
+  const [checkPs, setCheckPs] = useState(false);
   const [saleLoaded, setSaleLoaded] = useState(false);
   const [meta, setMeta] = useState([]);
   const [coins, setCoins] = useState([]);
@@ -49,9 +50,9 @@ export const ContentMain = (props: any) => {
     apiRevestUrl = "https://api.revest.finance/metadata?id=" + fnftId + "&chainId=250" 
   }
 
-  function handleCheckPs(e: string) {
-    console.log(e, checkPs);
-    setCheckPs(!checkPs);
+  function handleCheckPs() {
+    console.log(checkPs);
+    setCheckPs(true);
   }
 
 /*
@@ -100,7 +101,7 @@ export const ContentMain = (props: any) => {
       fetchFnft();
       setLastFnftId(fnftId);
     }
-  }, [fnftId, lambdaRevestUrl, submitBtn, refresh]);
+  }, [fnftId, lambdaRevestUrl, submitBtn, refresh, checkPs ]);
 
 
   if (error) {
@@ -108,7 +109,7 @@ export const ContentMain = (props: any) => {
   } else if (!fnftId) {
     return <div>Enter ID (0 - {lastFnft})</div>;
   } else if (!isLoaded) {
-    if ((coinsLoaded && fnftLoaded && saleLoaded && checkPs)) {
+    if ((coinsLoaded && fnftLoaded )) {
       setIsLoaded(true);
     }
     return (
@@ -118,7 +119,8 @@ export const ContentMain = (props: any) => {
     );
   } else {
 
-    let salesArr:[]=[]
+
+
     if (checkPs && (onsale.length !== 0)) {
       const fnftOnsale = JSON.parse(JSON.stringify(onsale));
       salesArr = fnftOnsale.sales.map((ons: any) => {
@@ -127,9 +129,12 @@ export const ContentMain = (props: any) => {
           tokenid: ons.tokenId,
           price: ons.price / 1000000000000000000,
           endtime: ons.endTime,
+          isauction: ons.isAuction
         };
       });
     }
+
+console.log(salesArr)
 
     fnftRewards = JSON.parse(JSON.stringify(rewards));
 
@@ -322,7 +327,14 @@ export const ContentMain = (props: any) => {
               </tbody>
             </table>
           </div>
-          {salesArr.length > 0 ? <PaintSwap salesArr={salesArr} /> : "" }
+          {checkPs  ?
+                      <PaintSwap salesArr={salesArr} />
+                    :
+                      <button  onClick={() => handleCheckPs()}>
+                        check PS
+                      </button>
+          }
+
         </div>
       </>
     );

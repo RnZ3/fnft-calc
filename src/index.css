@@ -67,7 +67,7 @@ img.smaller {
 
 img.smaller:hover {
   vertical-align: top;
-  height: 36px;
+  height: 16px;
 }
 
 .lqdrblue {
@@ -81,6 +81,11 @@ small {
 
 h1 {
   font-size: 1.7rem;
+}
+
+hr {
+  margin-top : 1.4rem;
+  margin-bottom : 1.4rem;
 }
 
 a:link, a:visited {

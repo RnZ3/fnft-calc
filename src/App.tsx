@@ -29,7 +29,6 @@ export function App() {
     <>
       <MyGlobalContext.Provider value={{ fnftId, setCopy }}>
         <h1>xLQDR fNFT Rewards Calculator</h1>
-        <hr/>
         <div className="container">
           <form onSubmit={submitForm}>
             <input
