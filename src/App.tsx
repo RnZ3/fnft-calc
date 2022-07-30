@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useFetchLastFnftId } from "hooks/useFetchLastFnftId";
 import { ContentMain } from "components/FnftData";
+import { PaintSwap } from "components/PaintSwap";
 import { MyGlobalContext } from "context/context";
 import { Footer } from "components/Footer";
 
@@ -23,7 +24,7 @@ export function App() {
     setId(fnftId);
   }, [fnftId]);
 
-  console.log(fnftId);
+//  console.log(fnftId);
 
   return (
     <>
@@ -48,6 +49,7 @@ export function App() {
         </div>
         <div>
           <ContentMain newId={data} lastFnft={lastFnft} submitBtn={submitBtn} />
+          <PaintSwap/>
           <Footer/>
         </div>
       </MyGlobalContext.Provider>

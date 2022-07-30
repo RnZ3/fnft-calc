@@ -5,7 +5,6 @@ import { ExtLink } from "components/ExtLink";
 import priceMap from "components/glue.json";
 import { fnftData, finalArray } from "components/interface";
 import { useGlobalContext } from "context/context";
-import { PaintSwap } from 'components/PaintSwap';
 
 const rewardToken = "liquiddriver,beethoven-x,spell-token,deus-finance,wrapped-fantom,spookyswap,linspirit,boo-mirrorworld,hundred-finance";
 const cgUrl = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=" + rewardToken;
@@ -28,20 +27,14 @@ export const ContentMain = (props: any) => {
   let apiRevestUrl: string = "";
   let lastFnft = props.lastFnft;
   let submitBtn = props.submitBtn;
-  let salesArr:[]=[]
   const refresh = useTimer(refreshInterval);
   const [error, setError] = useState(null);
   const [lastFnftId, setLastFnftId] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
   const [coinsLoaded, setCoinsLoaded] = useState(false);
   const [fnftLoaded, setFnftLoaded] = useState(false);
-  const [metaLoaded, setMetaLoaded] = useState(false);
-  const [checkPs, setCheckPs] = useState(false);
-  const [saleLoaded, setSaleLoaded] = useState(false);
-  const [meta, setMeta] = useState([]);
   const [coins, setCoins] = useState([]);
   const [rewards, setRewards] = useState([]);
-  const [onsale, setOnsale] = useState([]);
   const [oldFnftId, setOldFnftId] = useState("");
 
   if (fnftId) {
@@ -50,21 +43,6 @@ export const ContentMain = (props: any) => {
     apiRevestUrl = "https://api.revest.finance/metadata?id=" + fnftId + "&chainId=250" 
   }
 
-  function handleCheckPs() {
-    console.log(checkPs);
-    setCheckPs(true);
-  }
-
-/*
-  const fetchMeta = async () => {
-    const res = await fetch(apiRevestUrl, { redirect: 'follow' } )
-    res
-      .json()
-      .then(res => setMeta(res))
-      .catch(err => setError(err))
-      setMetaLoaded(true)
-  }
-*/
     const fetchCoins = async () => {
       const res = await fetch(cgUrl)
       const json = await res.json()
@@ -78,12 +56,6 @@ export const ContentMain = (props: any) => {
       setRewards(json);
       setFnftLoaded(true);
     };
-    const fetchPs = async () => {
-      const res = await fetch(psSales);
-      const json = await res.json();
-      setOnsale(json);
-      setSaleLoaded(true);
-    };
 
   useEffect(() => {
     if (fnftId) {
@@ -91,18 +63,12 @@ export const ContentMain = (props: any) => {
         setIsLoaded(false);
       }
       setFnftLoaded(false);
-//      setMetaLoaded(false);
       setCoinsLoaded(false);
-      if (checkPs && !saleLoaded ) {
-        fetchPs();
-      }
       fetchCoins();
-//      fetchMeta();
       fetchFnft();
       setLastFnftId(fnftId);
     }
-  }, [fnftId, lambdaRevestUrl, submitBtn, refresh, checkPs ]);
-
+  }, [fnftId, lambdaRevestUrl, submitBtn, refresh ]);
 
   if (error) {
     return <div>Error: {error["message"]}</div>;
@@ -119,23 +85,6 @@ export const ContentMain = (props: any) => {
     );
   } else {
 
-
-
-    if (checkPs && (onsale.length !== 0)) {
-      const fnftOnsale = JSON.parse(JSON.stringify(onsale));
-      salesArr = fnftOnsale.sales.map((ons: any) => {
-        return {
-          id: ons.id,
-          tokenid: ons.tokenId,
-          price: ons.price / 1000000000000000000,
-          endtime: ons.endTime,
-          isauction: ons.isAuction
-        };
-      });
-    }
-
-console.log(salesArr)
-
     fnftRewards = JSON.parse(JSON.stringify(rewards));
 
     if (!fnftRewards.body.outputMetadata) {
@@ -144,7 +93,6 @@ console.log(salesArr)
           <p className="middle warning" >
           Error, no metadata - try different ID
           </p>
-          {salesArr.length > 0 ? <PaintSwap salesArr={salesArr} /> : "" }
         </>
       );
     }
@@ -161,7 +109,6 @@ console.log(salesArr)
             Sorry, ID {fnftId}: "{fnftRewards.body.outputMetadata.name}" is not
             xLQDR - try different ID
           </p>
-          {salesArr.length > 0 ? <PaintSwap salesArr={salesArr} /> : "" }
         </>
       );
     }
@@ -327,14 +274,6 @@ console.log(salesArr)
               </tbody>
             </table>
           </div>
-          {checkPs  ?
-                      <PaintSwap salesArr={salesArr} />
-                    :
-                      <button  onClick={() => handleCheckPs()}>
-                        check PS
-                      </button>
-          }
-
         </div>
       </>
     );
