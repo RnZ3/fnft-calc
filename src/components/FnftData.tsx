@@ -18,7 +18,7 @@ var fnftRewards: any = "";
 var refreshInterval: number | null = null; // ms or null
 
 export const ContentMain = (props: any) => {
-  const { fnftId, setCopy } = useGlobalContext();
+  const { fnftId, setFnftId } = useGlobalContext();
 
   //console.log(fnftId)
 
@@ -43,19 +43,19 @@ export const ContentMain = (props: any) => {
     apiRevestUrl = "https://api.revest.finance/metadata?id=" + fnftId + "&chainId=250" 
   }
 
-    const fetchCoins = async () => {
-      const res = await fetch(cgUrl)
-      const json = await res.json()
-      setCoins(json)
-      setCoinsLoaded(true)
-    }
+  const fetchCoins = async () => {
+    const res = await fetch(cgUrl)
+    const json = await res.json()
+    setCoins(json)
+    setCoinsLoaded(true)
+  }
 
-    const fetchFnft = async () => {
-      const res = await fetch(lambdaRevestUrl);
-      const json = await res.json();
-      setRewards(json);
-      setFnftLoaded(true);
-    };
+  const fetchFnft = async () => {
+    const res = await fetch(lambdaRevestUrl);
+    const json = await res.json();
+    setRewards(json);
+    setFnftLoaded(true);
+  };
 
   useEffect(() => {
     if (fnftId) {

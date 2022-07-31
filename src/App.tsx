@@ -11,12 +11,12 @@ export function App() {
   const [submitBtn, setsubmitBtn] = useState(true);
   const lastFnft = useFetchLastFnftId();
 
-  const [fnftId, setCopy] = useState<string>("");
+  const [fnftId, setFnftId] = useState<string>("");
 
   const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setData(id);
-    setCopy(id);
+    setFnftId(id);
     setsubmitBtn(!submitBtn);
   };
 
@@ -28,7 +28,7 @@ export function App() {
 
   return (
     <>
-      <MyGlobalContext.Provider value={{ fnftId, setCopy }}>
+      <MyGlobalContext.Provider value={{ fnftId, setFnftId }}>
         <h1>xLQDR fNFT Rewards Calculator</h1>
         <div className="container">
           <form onSubmit={submitForm}>

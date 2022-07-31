@@ -2,12 +2,12 @@ import { createContext, useContext } from "react";
 
 export type GlobalContent = {
   fnftId: string;
-  setCopy: (c: string) => void;
+  setFnftId: (c: string) => void;
 };
 
 export const MyGlobalContext = createContext<GlobalContent>({
   fnftId: "", // set a default value
-  setCopy: () => {},
+  setFnftId: () => {},
 });
 
 export const useGlobalContext = () => useContext(MyGlobalContext);
