@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Spinner from "components/Spinner";
 import { ExtLink } from "components/ExtLink";
 import { useGlobalContext } from "context/context";
 
@@ -81,7 +82,14 @@ export function PaintSwap(props: any) {
 
   console.log(salesData);
 
-  if (checkPs && saleLoaded && metaLoaded) {
+  if (checkPs && (!saleLoaded || !metaLoaded)) {
+    return (
+      <div>
+        <hr />
+        <Spinner/>
+      </div>
+    )
+  } else if (checkPs && saleLoaded && metaLoaded) {
     return (
       <>
         <div>
