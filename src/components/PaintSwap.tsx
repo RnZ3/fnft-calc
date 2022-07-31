@@ -86,6 +86,7 @@ export function PaintSwap(props: any) {
     return (
       <div>
         <hr />
+        <p>Loading ... </p>
         <Spinner/>
       </div>
     )

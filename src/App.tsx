@@ -24,12 +24,10 @@ export function App() {
     setId(fnftId);
   }, [fnftId]);
 
-//  console.log(fnftId);
-
   return (
     <>
       <MyGlobalContext.Provider value={{ fnftId, setFnftId }}>
-        <h1>xLQDR fNFT Rewards Calculator</h1>
+        <h1><a onClick={() => {window.location.reload()}}>xLQDR fNFT Rewards Calculator</a></h1>
         <div className="container">
           <form onSubmit={submitForm}>
             <input

@@ -80,6 +80,7 @@ export const ContentMain = (props: any) => {
     }
     return (
       <div>
+        <p>Loading ... </p>
         <Spinner />
       </div>
     );
