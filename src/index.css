@@ -36,12 +36,23 @@ p.middle {
   display: inline;
 }
 
+p.warning {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ff3300;
+}
+
 div.container {
   margin-bottom: 30px;
 }
 
 .hidden {
   display: none;
+}
+
+img.icon-f {
+  vertical-align: middle;
+  height: 44px;
 }
 
 img.icon-v {
@@ -56,7 +67,7 @@ img.smaller {
 
 img.smaller:hover {
   vertical-align: top;
-  height: 36px;
+  height: 16px;
 }
 
 .lqdrblue {
@@ -70,6 +81,11 @@ small {
 
 h1 {
   font-size: 1.7rem;
+}
+
+hr {
+  margin-top : 1.4rem;
+  margin-bottom : 1.4rem;
 }
 
 a:link, a:visited {
