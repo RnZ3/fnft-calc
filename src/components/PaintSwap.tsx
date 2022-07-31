@@ -98,7 +98,7 @@ export function PaintSwap(props: any) {
           <table>
             <tbody>
               <tr className="tb">
-                <td>fNFT id</td>
+                <td align="center">fNFT id</td>
                 <td>Asset name</td>
                 <td>Price</td>
                 <td>Auction?</td>
@@ -107,14 +107,18 @@ export function PaintSwap(props: any) {
               </tr>
               {salesData.map((ps: any, i: number) => (
                 <tr key={i}>
-                  <td>
-                    <button onClick={() => handlePs(ps.tokenid)}>
-                      {ps.tokenid}
-                    </button>
+                  <td align="center">
+                    {ps.asset !== "xLQDR"
+                      ?
+                        ps.tokenid
+                      :
+                        <button onClick={() => handlePs(ps.tokenid)}>
+                          {ps.tokenid}
+                        </button>}
                   </td>
                   <td>{ps.asset}</td>
-                  <td>{ps.price} FTM</td>
-                  <td>{ps.isauction ? "auction" : "sale"}</td>
+                  <td align="right">{ps.price} FTM</td>
+                  <td align="center">{ps.isauction ? "auction" : "sale"}</td>
                   <td>{new Date(ps.endtime * 1000).toUTCString()}</td>
                   <td>
                     <a href={psUrl + ps.id} target="_blank" rel="noreferrer">
