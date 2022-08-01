@@ -57,8 +57,10 @@ export function PaintSwap(props: any) {
               endtime: ons.endTime,
               isauction: ons.isAuction,
               asset: response.properties.asset_name,
+              image: response.image,
             };
             salesData.push(data);
+console.log(response)
             //return data;
           });
       })
@@ -91,35 +93,40 @@ export function PaintSwap(props: any) {
       </div>
     )
   } else if (checkPs && saleLoaded && metaLoaded) {
+
+var finalData = salesData.reduce(function(result, offer) {
+  if (offer.asset === "xLQDR") {
+    result.push(offer);
+  }
+  return result;
+}, []);
+
+console.log(finalData)
+
     return (
       <>
         <div>
           <hr />
           <p>
-            currently <b>{salesData.length}</b> fNFT offered on PaintSwap:
+            currently <b>{finalData.length}</b> xLQDR fNFT offered on PaintSwap:
           </p>
           <table>
             <tbody>
               <tr className="tb">
-                <td align="center">fNFT ID</td>
-                <td>Asset name</td>
+                <td align="center" colSpan={2}>fNFT ID</td>
                 <td>Price</td>
                 <td>Auction?</td>
                 <td>End time</td>
                 <td>PS link</td>
               </tr>
-              {salesData.map((ps: any, i: number) => (
+              {finalData.map((ps: any, i: number) => (
                 <tr key={i}>
+                  <td><img className="fnft" src={ps.image} height="53px" onClick={() => handlePs(ps.fnftid)}/></td>
                   <td align="center">
-                    {ps.asset !== "xLQDR"
-                      ?
-                        ps.fnftid
-                      :
                         <button onClick={() => handlePs(ps.fnftid)}>
                           {ps.fnftid}
-                        </button>}
+                        </button>
                   </td>
-                  <td>{ps.asset}</td>
                   <td align="right">{ps.price} FTM</td>
                   <td align="center">{ps.isauction ? "auction" : "sale"}</td>
                   <td>{new Date(ps.endtime * 1000).toUTCString()}</td>

@@ -60,6 +60,16 @@ img.icon-v {
   height: 24px;
 }
 
+img.fnft {
+  vertical-align: middle;
+  height: 32px;
+}
+
+img.fnft:hover {
+  vertical-align: top;
+  transform: translateX(100px) scale(10);
+}
+
 img.smaller {
   vertical-align: middle;
   height: 12px;
@@ -124,6 +134,6 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(20, 20, 20, 0.5);
+  background-color: rgba(20, 20, 20, 0.3);
 }
 
