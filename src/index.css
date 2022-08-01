@@ -66,8 +66,7 @@ img.fnft {
 }
 
 img.fnft:hover {
-  vertical-align: top;
-  transform: translateX(100px) scale(10);
+  transform: translateX(200%) translateY(-200%) scale(7);
 }
 
 img.smaller {
