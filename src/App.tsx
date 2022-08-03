@@ -13,6 +13,12 @@ export function App() {
 
   const [fnftId, setFnftId] = useState<string>("");
 
+  const regex_digit = /^\d*$/
+  const queryParams = new URLSearchParams(window.location.search)
+  const qid = queryParams.get('id');
+
+  console.log( qid,lastFnft )
+
   const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setData(id);
@@ -23,6 +29,12 @@ export function App() {
   useEffect(() => {
     setId(fnftId);
   }, [fnftId]);
+
+  useEffect(() => {
+    if ( qid !== null && regex_digit.test(qid) && parseInt(qid) <= lastFnft ) {
+      setFnftId(qid)
+    }
+  }, [qid, lastFnft])
 
   return (
     <>

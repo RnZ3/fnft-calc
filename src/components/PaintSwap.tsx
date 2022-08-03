@@ -89,7 +89,6 @@ console.log(response)
       <div>
         <hr />
         <p>Loading ... </p>
-        <Spinner/>
       </div>
     )
   } else if (checkPs && saleLoaded && metaLoaded) {
