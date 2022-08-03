@@ -19,9 +19,6 @@ var refreshInterval: number | null = null; // ms or null
 
 export const ContentMain = (props: any) => {
   const { fnftId, setFnftId } = useGlobalContext();
-
-  //console.log(fnftId)
-
   let lambdaRevestUrl: string = "";
   let appRevestUrl: string = "";
   let apiRevestUrl: string = "";

@@ -10,9 +10,7 @@ export function App() {
   const [id, setId] = useState("");
   const [submitBtn, setsubmitBtn] = useState(true);
   const lastFnft = useFetchLastFnftId();
-
   const [fnftId, setFnftId] = useState<string>("");
-
   const regex_digit = /^\d*$/
   const queryParams = new URLSearchParams(window.location.search)
   const qid = queryParams.get('id');
