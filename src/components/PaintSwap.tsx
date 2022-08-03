@@ -60,7 +60,6 @@ export function PaintSwap(props: any) {
               image: response.image,
             };
             salesData.push(data);
-console.log(response)
             //return data;
           });
       })
@@ -82,14 +81,11 @@ console.log(response)
   const fnftOnsale = JSON.parse(JSON.stringify(onsale));
   salesData.sort((a, b) => parseFloat(a.fnftid) - parseFloat(b.fnftid));
 
-  console.log(salesData);
-
   if (checkPs && (!saleLoaded || !metaLoaded)) {
     return (
       <div>
         <hr />
         <p>Loading ... </p>
-        <Spinner/>
       </div>
     )
   } else if (checkPs && saleLoaded && metaLoaded) {
@@ -100,8 +96,6 @@ var finalData = salesData.reduce(function(result, offer) {
   }
   return result;
 }, []);
-
-console.log(finalData)
 
     return (
       <>
@@ -114,10 +108,10 @@ console.log(finalData)
             <tbody>
               <tr className="tb">
                 <td align="center" colSpan={2}>fNFT ID</td>
-                <td>Price</td>
-                <td>Auction?</td>
+                <td align="right">Price</td>
+                <td>Type</td>
                 <td>End time</td>
-                <td>PS link</td>
+                <td align="right">visit on PS</td>
               </tr>
               {finalData.map((ps: any, i: number) => (
                 <tr key={i}>
@@ -130,7 +124,7 @@ console.log(finalData)
                   <td align="right">{ps.price} FTM</td>
                   <td align="center">{ps.isauction ? "auction" : "sale"}</td>
                   <td>{new Date(ps.endtime * 1000).toUTCString()}</td>
-                  <td>
+                  <td align="right">
                     <a href={psItemUrl + ps.psid} target="_blank" rel="noreferrer">
                       {ps.psid} <ExtLink />
                     </a>

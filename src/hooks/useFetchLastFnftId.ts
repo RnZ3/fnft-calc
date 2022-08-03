@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import { fnft_address, fnft_abi } from "contracts/fnftContract"
 
 export function useFetchLastFnftId()  {
-  const [lastFnft, setLastFnft] = useState<number>(9999)
+  const [lastFnft, setLastFnft] = useState<number>(0)
   useEffect(() => {
     const fetchLastFnftId = async () => {
       const provider = new ethers.providers.JsonRpcProvider(
@@ -15,7 +15,7 @@ export function useFetchLastFnftId()  {
         provider
       );
       const fnftsCreated = await contract.fnftsCreated();
-      setLastFnft(parseInt(fnftsCreated) -1)
+      await setLastFnft(parseInt(fnftsCreated) -1)
     }
     fetchLastFnftId()
   }, [])
