@@ -45,7 +45,7 @@ export function App() {
               onChange={(e) => setId(e.target.value)}
               type="number"
               max={lastFnft}
-              min="0"
+              min="1"
               step="1"
               placeholder="fNFT ID"
               className="input"

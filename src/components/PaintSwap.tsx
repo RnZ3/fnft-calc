@@ -87,52 +87,66 @@ export function PaintSwap(props: any) {
         <hr />
         <p>Loading ... </p>
       </div>
-    )
+    );
   } else if (checkPs && saleLoaded && metaLoaded) {
-
-var finalData = salesData.reduce(function(result, offer) {
-  if (offer.asset === "xLQDR") {
-    result.push(offer);
-  }
-  return result;
-}, []);
+    var finalData = salesData.reduce(function (result, offer) {
+      if (offer.asset === "xLQDR") {
+        result.push(offer);
+      }
+      return result;
+    }, []);
 
     return (
       <>
         <div>
           <hr />
           <p>
-            currently <b>{finalData.length}</b> xLQDR fNFT offered on PaintSwap:
+            currently <b>{finalData.length}</b> xLQDR fNFT offered on PaintSwap
           </p>
-          <table>
-            <tbody>
-              <tr className="tb">
-                <td align="center" colSpan={2}>fNFT ID</td>
-                <td align="right">Price</td>
-                <td>Type</td>
-                <td>End time</td>
-                <td align="right">visit on PS</td>
-              </tr>
-              {finalData.map((ps: any, i: number) => (
-                <tr key={i}>
-                  <td><img className="fnft" src={ps.image} height="53px" onClick={() => handlePs(ps.fnftid)}/></td>
-                  <td align="center">
-                        <button onClick={() => handlePs(ps.fnftid)}>
-                          {ps.fnftid}
-                        </button>
+          <div className={finalData.length > 0 ? "tb" : "hidden"}>
+            <table>
+              <tbody>
+                <tr className="tb">
+                  <td align="center" colSpan={2}>
+                    fNFT ID
                   </td>
-                  <td align="right">{ps.price} FTM</td>
-                  <td align="center">{ps.isauction ? "auction" : "sale"}</td>
-                  <td>{new Date(ps.endtime * 1000).toUTCString()}</td>
-                  <td align="right">
-                    <a href={psItemUrl + ps.psid} target="_blank" rel="noreferrer">
-                      {ps.psid} <ExtLink />
-                    </a>
-                  </td>
+                  <td align="right">Price</td>
+                  <td>Type</td>
+                  <td>End time</td>
+                  <td align="right">visit on PS</td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+                {finalData.map((ps: any, i: number) => (
+                  <tr key={i}>
+                    <td>
+                      <img
+                        className="fnft"
+                        src={ps.image}
+                        height="53px"
+                        onClick={() => handlePs(ps.fnftid)}
+                      />
+                    </td>
+                    <td align="center">
+                      <button onClick={() => handlePs(ps.fnftid)}>
+                        {ps.fnftid}
+                      </button>
+                    </td>
+                    <td align="right">{ps.price} FTM</td>
+                    <td align="center">{ps.isauction ? "auction" : "sale"}</td>
+                    <td>{new Date(ps.endtime * 1000).toUTCString()}</td>
+                    <td align="right">
+                      <a
+                        href={psItemUrl + ps.psid}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {ps.psid} <ExtLink />
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </>
     );

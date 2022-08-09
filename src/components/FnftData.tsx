@@ -70,7 +70,7 @@ export const ContentMain = (props: any) => {
   if (error) {
     return <div>Error: {error["message"]}</div>;
   } else if (!fnftId) {
-    return <div>Enter ID (0 - {lastFnft})</div>;
+    return <div>Enter ID (1 - {lastFnft})</div>;
   } else if (!isLoaded) {
     if ((coinsLoaded && fnftLoaded )) {
       setIsLoaded(true);
