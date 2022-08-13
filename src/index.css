@@ -17,6 +17,7 @@ table {
 tr.tb {
   background: #333333;
   color: #ffa800;
+  white-space: nowrap;
 }
 
 .green {
@@ -44,6 +45,10 @@ p.warning {
 
 div.container {
   margin-bottom: 30px;
+}
+
+div.scroll {
+  overflow: scroll;
 }
 
 .hidden {
@@ -134,5 +139,17 @@ a:hover {
   align-items: center;
   justify-content: center;
   background-color: rgba(20, 20, 20, 0.3);
+}
+
+@media screen and (max-width:640px) {
+  body {
+    margin: 10px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: #222222;
+    color: #cccccc;
+  }
 }
 
