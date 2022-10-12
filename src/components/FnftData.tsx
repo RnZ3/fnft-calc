@@ -6,7 +6,7 @@ import priceMap from "components/glue.json";
 import { fnftData, finalArray } from "components/interface";
 import { useGlobalContext } from "context/context";
 
-const rewardToken = "liquiddriver,beethoven-x,spell-token,deus-finance,wrapped-fantom,spookyswap,linspirit,boo-mirrorworld,hundred-finance";
+const rewardToken = "liquiddriver,beethoven-x,spell-token,deus-finance-2,wrapped-fantom,spookyswap,linspirit";
 const cgUrl = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=" + rewardToken;
 const psApi = "https://api.paintswap.finance/v2/collections/0x58a57754e8d8693703e51604696bd065f25333fd";
 const collectionUrl = "https://paintswap.finance/marketplace/collections/0x58a57754e8d8693703e51604696bd065f25333fd";
