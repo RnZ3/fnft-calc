@@ -103,7 +103,7 @@ export function PaintSwap(props: any) {
           <p>
             currently <b>{finalData.length}</b> xLQDR fNFT offered on PaintSwap
           </p>
-          <div className={finalData.length > 0 ? "scroll" : "hidden"}>
+          <div className={finalData.length > 0 ? "" : "hidden"}>
             <table>
               <tbody>
                 <tr className="tb">

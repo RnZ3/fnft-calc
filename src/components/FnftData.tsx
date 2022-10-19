@@ -236,7 +236,7 @@ export const ContentMain = (props: any) => {
             </span>
           </p>
           <p>Rewards available: {rewardsAvailable ? "" : "no"}</p>
-          <div className={rewardsAvailable ? "scroll" : "hidden"}>
+          <div className={rewardsAvailable ? "" : "hidden"}>
             <table>
               <tbody>
                 <tr className="tb">
