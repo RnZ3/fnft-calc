@@ -5,7 +5,7 @@ import { useGlobalContext } from "context/context";
 
 const psItemUrl = "https://paintswap.finance/marketplace/";
 const psSalesUrl =
-  "https://api.paintswap.finance/v2/sales?onlyActive=true&sold=false&collections[0]=0x58a57754e8d8693703e51604696bd065f25333fd";
+  "https://api.paintswap.finance/v2/sales?showUnverified=true&collections[0]=0xa6f5efc3499d41ff1eca9d325cfe13c913a85f45&version=2"
 var salesData: any[] = [];
 
 export function PaintSwap(props: any) {
