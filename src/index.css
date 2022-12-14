@@ -20,6 +20,10 @@ tr.tb {
   white-space: nowrap;
 }
 
+.white {
+  color: #FFF;
+}
+
 .green {
   color: #00ff54;
 }

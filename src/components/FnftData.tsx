@@ -121,12 +121,16 @@ export const ContentMain = (props: any) => {
       (rw: any) => rw
     );
 
+
     if (fnftRewards.body.outputMetadata.info_modal[4]) {
       lqdrBalance = fnftRewards.body.outputMetadata.info_modal[4].value;
     } else {
       lqdrBalance = -1;
     }
 
+    const smartWalletAddress = (fnftRewards.body.outputMetadata.info_modal[0].value) 
+      ? fnftRewards.body.outputMetadata.info_modal[0].value 
+      : "unkn"
     const lqdrLocked = fnftRewards.body.locked;
     const lqdrUnlockdate = fnftRewards.body.unlockDate;
     const xlqdrBalance = fnftRewards.body.value;
@@ -222,6 +226,7 @@ export const ContentMain = (props: any) => {
               </span>{" "}
             </small>
           </p>
+          <p>Smart Wallet Address: <span className="white">{smartWalletAddress}</span></p>
           <p>
             LQDR Balance:
             <img className="icon-v" src={image} alt="linked from metadata" />
