@@ -30,7 +30,9 @@ export const ContentMain = (props: any) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [coinsLoaded, setCoinsLoaded] = useState(false);
   const [fnftLoaded, setFnftLoaded] = useState(false);
+  const [metaLoaded, setMetaLoaded] = useState(false);
   const [coins, setCoins] = useState([]);
+  const [metaData, setMeta] = useState([]);
   const [rewards, setRewards] = useState([]);
   const [oldFnftId, setOldFnftId] = useState("");
 
@@ -54,6 +56,13 @@ export const ContentMain = (props: any) => {
     setFnftLoaded(true);
   };
 
+  const fetchMeta = async () => {
+    const res = await fetch(apiRevestUrl);
+    const json = await res.json();
+    setMeta(json);
+    setMetaLoaded(true);
+  };
+
   useEffect(() => {
     if (fnftId) {
       if (fnftId !== lastFnftId) {
@@ -61,8 +70,10 @@ export const ContentMain = (props: any) => {
       }
       setFnftLoaded(false);
       setCoinsLoaded(false);
+      setMetaLoaded(false);
       fetchCoins();
       fetchFnft();
+      fetchMeta();
       setLastFnftId(fnftId);
     }
   }, [fnftId, lambdaRevestUrl, submitBtn, refresh ]);
@@ -72,7 +83,7 @@ export const ContentMain = (props: any) => {
   } else if (!fnftId) {
     return <div>Enter ID (1 - {lastFnft})</div>;
   } else if (!isLoaded) {
-    if ((coinsLoaded && fnftLoaded )) {
+    if ((coinsLoaded && fnftLoaded && metaLoaded)) {
       setIsLoaded(true);
     }
     return (
@@ -81,6 +92,9 @@ export const ContentMain = (props: any) => {
       </div>
     );
   } else {
+
+    const jMeta = JSON.parse(JSON.stringify(metaData));
+    const fnftCreateTime = new Date(jMeta.properties.created * 1000).toUTCString()
 
     fnftRewards = JSON.parse(JSON.stringify(rewards));
 
@@ -226,7 +240,8 @@ export const ContentMain = (props: any) => {
               </span>{" "}
             </small>
           </p>
-          <p>Smart Wallet Address: <span className="white">{smartWalletAddress}</span></p>
+          <p>Smart Wallet Address: <span className="white">{smartWalletAddress}</span>{'  '}
+              created: <span className="white">{fnftCreateTime}</span></p>
           <p>
             LQDR Balance:
             <img className="icon-v" src={image} alt="linked from metadata" />
