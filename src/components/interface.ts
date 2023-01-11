@@ -3,12 +3,12 @@ export interface TokenPrice {
   current_price: number;
 }
 
-export interface fnftData {
+export interface TokenData {
   amount: number;
   token:  string;
 }
 
-export interface finalArray {
+export interface FinalArray {
   value:  number;
   token:  string;
   cgname: string;

@@ -1,21 +1,30 @@
-import React, { useState, useEffect } from "react";
-import useTimer from "hooks/useTimer";
-import Spinner from "components/Spinner";
 import { ExtLink } from "components/ExtLink";
+import { useQuery } from "@tanstack/react-query";
 import priceMap from "components/glue.json";
-import { fnftData, finalArray } from "components/interface";
+import { FinalArray, TokenData } from "components/interface";
 import { useGlobalContext } from "context/context";
+import useTimer from "hooks/useTimer";
+import { useEffect, useState } from "react";
 
-const rewardToken = "liquiddriver,beethoven-x,spell-token,deus-finance-2,wrapped-fantom,spookyswap,linspirit";
-const cgUrl = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=" + rewardToken;
-const psApi = "https://api.paintswap.finance/v2/collections/0x58a57754e8d8693703e51604696bd065f25333fd";
-const collectionUrl = "https://paintswap.finance/marketplace/collections/0x58a57754e8d8693703e51604696bd065f25333fd";
-const psUrl = "https://paintswap.finance/marketplace/" 
-const psSales = "https://api.paintswap.finance/v2/sales?onlyActive=true&sold=false&collections[0]=0x58a57754e8d8693703e51604696bd065f25333fd";
+const rewardToken =
+  "liquiddriver,beethoven-x,spell-token,deus-finance-2,wrapped-fantom,spookyswap,linspirit";
+const cgUrl =
+  "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=" +
+  rewardToken;
+const ftmscanUrl = "https://ftmscan.com/address/";
 var rewardsAvailable: boolean = false;
 var lqdrBalance: number = 0;
-var fnftRewards: any = "";
 var refreshInterval: number | null = null; // ms or null
+
+async function fetchData(URL: string) {
+  const res = await fetch(URL || "");
+  return res.json();
+}
+
+const STALE_T_FNFT = 60000;
+const STALE_T_COINS = 60000;
+const STALE_T_META = 120000; //Infinity;
+const REFRESH_INTERVAL = 180000;
 
 export const ContentMain = (props: any) => {
   const { fnftId, setFnftId } = useGlobalContext();
@@ -27,134 +36,160 @@ export const ContentMain = (props: any) => {
   const refresh = useTimer(refreshInterval);
   const [error, setError] = useState(null);
   const [lastFnftId, setLastFnftId] = useState("");
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [coinsLoaded, setCoinsLoaded] = useState(false);
-  const [fnftLoaded, setFnftLoaded] = useState(false);
-  const [metaLoaded, setMetaLoaded] = useState(false);
-  const [coins, setCoins] = useState([]);
-  const [metaData, setMeta] = useState([]);
-  const [rewards, setRewards] = useState([]);
   const [oldFnftId, setOldFnftId] = useState("");
+  const [metaI, setMetaI] = useState("");
+  const [fnftI, setFnftI] = useState("");
+  const [coinI, setCoinI] = useState("");
 
   if (fnftId) {
-    lambdaRevestUrl = "https://lambda.revest.finance/api/getUpdatedFNFT/" + fnftId + "-250";
+    lambdaRevestUrl =
+      "https://lambda.revest.finance/api/getUpdatedFNFT/" + fnftId + "-250";
     appRevestUrl = "https://app.revest.finance/?chainId=250&id=" + fnftId;
-    apiRevestUrl = "https://api.revest.finance/metadata?id=" + fnftId + "&chainId=250" 
+    apiRevestUrl =
+      "https://api.revest.finance/metadata?id=" + fnftId + "&chainId=250";
   }
 
-  const fetchCoins = async () => {
-    const res = await fetch(cgUrl)
-    const json = await res.json()
-    setCoins(json)
-    setCoinsLoaded(true)
-  }
+  const {
+    data: coinData,
+    isSuccess: coinsLoaded,
+    isLoading: coinsLoading,
+    dataUpdatedAt: coinsUpdated,
+    isStale: coinsStale,
+    isFetching: coinsFetching,
+    isRefetching: coinsRefetching,
+  } = useQuery({
+    queryKey: ["coinData", cgUrl],
+    queryFn: () => fetchData(cgUrl),
+    enabled: !!fnftId,
+    refetchInterval: REFRESH_INTERVAL,
+    staleTime: STALE_T_COINS,
+  });
 
-  const fetchFnft = async () => {
-    const res = await fetch(lambdaRevestUrl);
-    const json = await res.json();
-    setRewards(json);
-    setFnftLoaded(true);
-  };
+  const {
+    data: fnftData,
+    isSuccess: fnftLoaded,
+    isLoading: rewardsLoading,
+    dataUpdatedAt: rewardsUpdated,
+    isStale: fnftStale,
+  } = useQuery({
+    queryKey: ["fnftData", lambdaRevestUrl],
+    queryFn: () => fetchData(lambdaRevestUrl),
+    enabled: !!fnftId,
+    refetchInterval: REFRESH_INTERVAL,
+    staleTime: STALE_T_FNFT,
+  });
 
-  const fetchMeta = async () => {
-    const res = await fetch(apiRevestUrl);
-    const json = await res.json();
-    setMeta(json);
-    setMetaLoaded(true);
-  };
+  const {
+    data: metaData,
+    isSuccess: metaLoaded,
+    isLoading: metaLoading,
+    dataUpdatedAt: metaUpdated,
+    isStale: metaStale,
+  } = useQuery({
+    queryKey: ["metaData", apiRevestUrl],
+    queryFn: () => fetchData(apiRevestUrl),
+    enabled: !!fnftId,
+    refetchInterval: REFRESH_INTERVAL,
+    staleTime: STALE_T_META,
+  });
 
   useEffect(() => {
-    if (fnftId) {
-      if (fnftId !== lastFnftId) {
-        setIsLoaded(false);
-      }
-      setFnftLoaded(false);
-      setCoinsLoaded(false);
-      setMetaLoaded(false);
-      fetchCoins();
-      fetchFnft();
-      fetchMeta();
-      setLastFnftId(fnftId);
-    }
-  }, [fnftId, lambdaRevestUrl, submitBtn, refresh ]);
+    setCoinI(coinsStale ? "box borange" : "box bgreen");
+    setFnftI(fnftStale ? "box borange" : "box bgreen");
+    setMetaI(metaStale ? "box borange" : "box bgreen");
+
+    console.log("------");
+    console.log("c:", coinI);
+    console.log("m:", metaI);
+    console.log("f:", fnftI);
+  }, [
+    metaUpdated,
+    coinsUpdated,
+    rewardsUpdated,
+    coinsStale,
+    fnftStale,
+    metaStale,
+    coinI,
+    metaI,
+    fnftI,
+  ]);
 
   if (error) {
     return <div>Error: {error["message"]}</div>;
   } else if (!fnftId) {
     return <div>Enter ID (1 - {lastFnft})</div>;
-  } else if (!isLoaded) {
-    if ((coinsLoaded && fnftLoaded && metaLoaded)) {
-      setIsLoaded(true);
-    }
+  } else if (coinsLoading) {
     return (
       <div>
-        <p>Loading ... </p>
+        <p>Loading coins ... </p>
+      </div>
+    );
+  }
+  if (rewardsLoading) {
+    return (
+      <div>
+        <p>Loading fNFT data ... </p>
+      </div>
+    );
+  }
+  if (metaLoading) {
+    return (
+      <div>
+        <p>Loading metadata ... </p>
       </div>
     );
   } else {
+    const fnftCreateTime = new Date(
+      metaData?.properties.created * 1000
+    ).toUTCString();
 
-    const jMeta = JSON.parse(JSON.stringify(metaData));
-    const fnftCreateTime = new Date(jMeta.properties.created * 1000).toUTCString()
-
-    fnftRewards = JSON.parse(JSON.stringify(rewards));
-
-    if (!fnftRewards.body.outputMetadata) {
+    if (!fnftData?.body.outputMetadata) {
       return (
-        <>
-          <p className="middle warning" >
-          Error, no metadata - try different ID
-          </p>
-        </>
+        <p className="middle warning">Error, no metadata - try different ID</p>
       );
     }
 
     if (
       !(
-        fnftRewards.body.outputMetadata.name ===
+        fnftData?.body.outputMetadata.name ===
         "Revest Liquid Driver Integration"
       )
     ) {
       return (
-        <>
-          <p className="middle warning" >
-            Sorry, ID {fnftId}: "{fnftRewards.body.outputMetadata.name}" is not
-            xLQDR - try different ID
-          </p>
-        </>
+        <p className="middle warning">
+          Sorry, ID {fnftId}: "{fnftData?.body.outputMetadata.name}" is not
+          xLQDR - try different ID
+        </p>
       );
     }
 
-    if (fnftRewards.body.outputMetadata.front_display[0].value === true) {
+    if (fnftData?.body.outputMetadata.front_display[0].value === true) {
       rewardsAvailable = true;
     } else {
       rewardsAvailable = false;
     }
 
-    const image = fnftRewards.body.outputMetadata.front_display[1].value;
-    const farr = fnftRewards.body.outputMetadata.info_modal[1].value.map(
-      (rw: any) => rw
-    );
+    const image = fnftData?.body.outputMetadata.front_display[1].value;
 
-
-    if (fnftRewards.body.outputMetadata.info_modal[4]) {
-      lqdrBalance = fnftRewards.body.outputMetadata.info_modal[4].value;
+    if (fnftData?.body.outputMetadata.info_modal[4]) {
+      lqdrBalance = fnftData?.body.outputMetadata.info_modal[4].value;
     } else {
       lqdrBalance = -1;
     }
 
-    const smartWalletAddress = (fnftRewards.body.outputMetadata.info_modal[0].value) 
-      ? fnftRewards.body.outputMetadata.info_modal[0].value 
-      : "unkn"
-    const lqdrLocked = fnftRewards.body.locked;
-    const lqdrUnlockdate = fnftRewards.body.unlockDate;
-    const xlqdrBalance = fnftRewards.body.value;
+    const smartWalletAddress = fnftData?.body.outputMetadata.info_modal[0].value
+      ? fnftData?.body.outputMetadata.info_modal[0].value
+      : "unkn";
+    const lqdrLocked = fnftData?.body.locked;
+    const lqdrUnlockdate = fnftData?.body.unlockDate;
+    const xlqdrBalance = fnftData?.body.value;
     const lqdrTimeUTC = new Date(lqdrUnlockdate * 1000).toUTCString();
     const tsNow = Math.floor(Date.now() / 1000);
     const days = Math.floor((lqdrUnlockdate - tsNow) / 86400);
     var ftmPrice: number = 0;
     var lqdrPrice: number = 0;
 
-    coins.forEach(function (c: any) {
+    coinData?.forEach(function (c: any) {
       if (c.id === "wrapped-fantom") {
         ftmPrice = c.current_price;
       }
@@ -166,16 +201,17 @@ export const ContentMain = (props: any) => {
     const lqdrUSD = lqdrPrice * lqdrBalance;
     const lqdrFTM = lqdrUSD / ftmPrice;
 
-    var farr2 = farr.map(function mapper(v: any) {
-      if (typeof v == "string") {
-        return v.split(" ");
-      } else {
-        return v.map(mapper);
+    const rewards = fnftData?.body.outputMetadata.info_modal[1].value.map(
+      function mapper(line: any) {
+        if (typeof line == "string") {
+          return line.split(" ");
+        } else {
+          return line.map(mapper);
+        }
       }
-    });
+    );
 
-    const farr3: any = JSON.parse(JSON.stringify(farr2));
-    let tokenArray: fnftData[] = [];
+    let tokenArray: TokenData[] = [];
     var amount: string = "";
     var amount_n: number;
     var total: number = 0;
@@ -183,7 +219,7 @@ export const ContentMain = (props: any) => {
     const regex_amount = new RegExp("[0-9]");
     const regex_token = new RegExp("[\\[\\]]");
 
-    farr3.forEach(function (x: any) {
+    rewards?.forEach(function (x: any) {
       x.forEach(function (v: string) {
         if (regex_amount.test(v)) {
           amount = v;
@@ -193,19 +229,19 @@ export const ContentMain = (props: any) => {
           token = v;
         }
       });
-      var data: fnftData = { amount: amount_n, token: token };
+      var data: TokenData = { amount: amount_n, token: token };
       tokenArray.push(data);
     });
 
-    var finalData: finalArray[] = [];
+    var finalData: FinalArray[] = [];
 
     tokenArray.forEach(function (t) {
       priceMap.forEach(function (m: any) {
         if (t.token === m.rewardtoken) {
-          coins.forEach(function (c: any) {
+          coinData?.forEach(function (c: any) {
             if (c.id === m.cgname) {
               if (!(t.amount === 0)) {
-                var data: finalArray = {
+                var data: FinalArray = {
                   value: t.amount * c.current_price,
                   token: t.token,
                   cgname: m.cgname,
@@ -222,6 +258,16 @@ export const ContentMain = (props: any) => {
       });
     });
 
+    const fraction1 = lqdrBalance / 100; // 1%
+    const fraction2 = lqdrBalance * 0.01; // 1%
+    const rest = xlqdrBalance / fraction2; // teiler prozent
+    const lost = 100 - rest;
+
+    const links = lost;
+    const rechts = rest;
+
+    console.log(fraction1, fraction2, rest, lost);
+
     return (
       <>
         <div className="wrapper">
@@ -230,30 +276,51 @@ export const ContentMain = (props: any) => {
             <span className={lqdrLocked === "locked" ? "orange" : "green"}>
               {fnftId}
             </span>{" "}
-            ({lqdrLocked} {"->"} {lqdrTimeUTC} ({days} days)){" "}
+            ({lqdrLocked} {"->"} <span className="white">{lqdrTimeUTC}</span> (
+            {days} days))
             <small>
               {" "}
               <span className={lqdrLocked === "locked" ? "orange" : "green"}>
                 <a href={appRevestUrl} target="_blank" rel="noreferrer">
-                  extend/claim {fnftId} <ExtLink/>
+                  manage {fnftId} <ExtLink />
                 </a>{" "}
               </span>{" "}
             </small>
           </p>
-          <p>Smart Wallet Address: <span className="white">{smartWalletAddress}</span>{'  '}
-              created: <span className="white">{fnftCreateTime}</span></p>
+          <p>
+            Smart Wallet Address:{" "}
+            <span className="white">
+              <a href={ftmscanUrl + smartWalletAddress}>{smartWalletAddress}</a>
+            </span>
+            {"  "}
+            <br />
+            created: <span className="white">{fnftCreateTime}</span>
+          </p>
           <p>
             LQDR Balance:
             <img className="icon-v" src={image} alt="linked from metadata" />
             <span className="lqdrblue">
               {lqdrBalance === -1 ? "NaN" : lqdrBalance}{" "}
-            </span>{" "}
-            <span className={lqdrLocked === "locked" ? "orange" : "hidden"}>
-              ({xlqdrBalance})
-            </span>{" "}
+            </span>
             <span className={lqdrBalance === -1 ? "hidden" : ""}>
               ($ {lqdrUSD.toFixed(2)}) ({lqdrFTM.toFixed(2)} FTM)
-            </span>
+            </span>{" "}
+            <br />
+            xLQDR Value:{" "}
+            <span className={lqdrLocked === "locked" ? "orange" : "hidden"}>
+              {xlqdrBalance}
+            </span>{" "}
+            <br />
+            <div className="xbarcontainer">
+              <div
+                className="xbar"
+                style={{ background: "#4dd9f6", width: links + "%" }}
+              ></div>
+              <div
+                className="xbar"
+                style={{ background: "#ffa800", width: rechts + "%" }}
+              ></div>
+            </div>
           </p>
           <p>Rewards available: {rewardsAvailable ? "" : "no"}</p>
           <div className={rewardsAvailable ? "" : "hidden"}>
@@ -283,14 +350,19 @@ export const ContentMain = (props: any) => {
                   </tr>
                 ))}
                 <tr className="tb">
-                  <td colSpan={3}></td>
-                  <td> </td>
+                  <td colSpan={4}></td>
+
                   <td>Total:</td>
-                  <td align="right">{total.toFixed(9)}</td>
+                  <td align="right">{total.toFixed(6)}</td>
                 </tr>
               </tbody>
             </table>
           </div>
+        </div>
+        <div className="bbox">
+          <div className={fnftI}></div>
+          <div className={coinI}></div>
+          <div className={metaI}></div>
         </div>
       </>
     );

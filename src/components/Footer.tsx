@@ -4,8 +4,7 @@ import { ghLogo, ghLogoAlt } from "img/gh-mark";
 export function Footer()  {
   return (
     <>
-      <hr/>
-      <p>
+      <div className="footer">
         <small>
           NFA, DYOR -- thanks revest.finance, liquiddriver.finance,
           paintswap.finance, coingecko.com, vercel.com, github.com,
@@ -14,7 +13,7 @@ export function Footer()  {
             <img src={ghLogo} className="smaller" alt="gh logo"/>
           </a>
         </small>
-      </p>
+      </div>
     </>
   )
 }

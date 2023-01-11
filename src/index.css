@@ -6,9 +6,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background: #222222;
   color: #cccccc;
+  margin: 0% 10%;
 }
 
-table { 
+table {
   border-spacing: 0px;
   border-collapse: separate;
   background: #222222;
@@ -21,7 +22,7 @@ tr.tb {
 }
 
 .white {
-  color: #FFF;
+  color: #fff;
   font-size: smaller;
 }
 
@@ -33,7 +34,7 @@ tr.tb {
   color: #ffa800;
 }
 
-td { 
+td {
   padding: 10px;
 }
 
@@ -54,6 +55,10 @@ div.container {
 
 div.scroll {
   overflow: scroll;
+}
+
+div.footer {
+  border-top: 1px solid grey;
 }
 
 .hidden {
@@ -103,17 +108,63 @@ h1 {
 }
 
 hr {
-  margin-top : 1.4rem;
-  margin-bottom : 1.4rem;
+  margin-top: 1.4rem;
+  margin-bottom: 1.4rem;
 }
 
-a:link, a:visited {
+a:link,
+a:visited {
   text-decoration: none;
   color: inherit;
 }
 
 a:hover {
   text-decoration: underline;
+}
+
+div.xbarcontainer {
+  margin: 0px;
+  width: 500px;
+}
+
+div.xbar {
+  margin: 0px;
+  display: inline-block;
+  border: 0px solid white;
+  border-radius: 0px;
+  height: 1px;
+}
+
+.bbox {
+  display: inline-block;
+  position: fixed;
+  top: 0px;
+  right: 12px;
+}
+
+.box {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin: 0px 0px 0px 0px;
+  border: 1px solid black;
+  border-radius: 20%;
+}
+
+.bgreen {
+  background: green;
+  height: 8px;
+  opacity: 80%;
+}
+
+.borange {
+  background: orange;
+  height: 6px;
+  opacity: 70%;
+}
+
+.bblue {
+  background: blue;
 }
 
 /* spinner */
@@ -125,6 +176,7 @@ a:hover {
     transform: rotate(360deg);
   }
 }
+
 .loading-spinner {
   width: 40px;
   height: 40px;
@@ -146,7 +198,7 @@ a:hover {
   background-color: rgba(20, 20, 20, 0.3);
 }
 
-@media screen and (max-width:640px) {
+@media screen and (max-width: 640px) {
   body {
     margin: 10px;
     font-family: monospace;
@@ -157,4 +209,3 @@ a:hover {
     color: #cccccc;
   }
 }
-

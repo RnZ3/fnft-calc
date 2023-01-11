@@ -5,7 +5,7 @@ import { useGlobalContext } from "context/context";
 
 const psItemUrl = "https://paintswap.finance/marketplace/";
 const psSalesUrl =
-  "https://api.paintswap.finance/v2/sales?showUnverified=true&collections[0]=0xa6f5efc3499d41ff1eca9d325cfe13c913a85f45&version=2"
+  "https://api.paintswap.finance/v2/sales?showUnverified=true&collections[0]=0xa6f5efc3499d41ff1eca9d325cfe13c913a85f45&version=2";
 var salesData: any[] = [];
 
 export function PaintSwap(props: any) {
@@ -84,7 +84,6 @@ export function PaintSwap(props: any) {
   if (checkPs && (!saleLoaded || !metaLoaded)) {
     return (
       <div>
-        <hr />
         <p>Loading ... </p>
       </div>
     );
@@ -99,9 +98,8 @@ export function PaintSwap(props: any) {
     return (
       <>
         <div>
-          <hr />
           <p>
-            currently <b>{finalData.length}</b> xLQDR fNFT offered on PaintSwap
+            currently <b>{finalData.length}</b> xLQDR fNFT offered on PaintSwap:
           </p>
           <div className={finalData.length > 0 ? "" : "hidden"}>
             <table>
@@ -154,7 +152,6 @@ export function PaintSwap(props: any) {
     return (
       <>
         <div>
-          <hr />
           <p>
             <button onClick={() => setCheckPs(true)}>
               check PaintSwap offers
