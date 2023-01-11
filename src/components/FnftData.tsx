@@ -266,33 +266,35 @@ export const ContentMain = (props: any) => {
     return (
       <>
         <div className="wrapper">
-          <div>
-            fNFT ID:{" "}
-            <span className={lqdrLocked === "locked" ? "orange" : "green"}>
-              {fnftId}
-            </span>{" "}
-            ({lqdrLocked} {"->"} <span className="white">{lqdrTimeUTC}</span> (
-            {days} days)){" "}
-            <small>
+          <div className="wrapper2">
+            <p>
+              fNFT ID:{" "}
               <span className={lqdrLocked === "locked" ? "orange" : "green"}>
-                <a href={appRevestUrl} target="_blank" rel="noreferrer">
-                  manage
-                  <ExtLink />
-                </a>
-              </span>
-            </small>
+                {fnftId}
+              </span>{" "}
+              ({lqdrLocked} {"->"} <span className="white">{lqdrTimeUTC}</span>{" "}
+              ({days} days)){" "}
+              <small>
+                <span className={lqdrLocked === "locked" ? "orange" : "green"}>
+                  <a href={appRevestUrl} target="_blank" rel="noreferrer">
+                    manage
+                    <ExtLink />
+                  </a>
+                </span>
+              </small>
+            </p>
+            <div className="xbarcontainer">
+              <div
+                className="xbar"
+                style={{ background: "#4dd9f6", width: links + "%" }}
+              ></div>
+              <div
+                className="xbar"
+                style={{ background: "#ffa800", width: rechts + "%" }}
+              ></div>
+            </div>
           </div>
-          <div className="xbarcontainer">
-            <div
-              className="xbar"
-              style={{ background: "#4dd9f6", width: links + "%" }}
-            ></div>
-            <div
-              className="xbar"
-              style={{ background: "#ffa800", width: rechts + "%" }}
-            ></div>
-          </div>
-          <div>
+          <p>
             LQDR Balance:
             <img className="icon-v" src={image} alt="linked from metadata" />
             <span className="lqdrblue">
@@ -307,8 +309,8 @@ export const ContentMain = (props: any) => {
               {xlqdrBalance}
             </span>{" "}
             <br />
-          </div>
-          <div>
+          </p>
+          <p>
             Smart Wallet Address:{" "}
             <span className="white">
               <a href={ftmscanUrl + smartWalletAddress}>{smartWalletAddress}</a>
@@ -316,8 +318,8 @@ export const ContentMain = (props: any) => {
             {"  "}
             <br />
             created: <span className="white">{fnftCreateTime}</span>
-          </div>
-          <div>Rewards available: {rewardsAvailable ? "" : "no"}</div>
+          </p>
+          <p>Rewards available: {rewardsAvailable ? "" : "no"}</p>
           <div className={rewardsAvailable ? "" : "hidden"}>
             <table>
               <tbody>

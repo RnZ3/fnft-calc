@@ -122,6 +122,10 @@ a:hover {
   text-decoration: underline;
 }
 
+div.wrapper2 {
+  width: fit-content;
+}
+
 div.xbarcontainer {
   margin: 0px;
   width: auto;
