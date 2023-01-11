@@ -124,7 +124,7 @@ a:hover {
 
 div.xbarcontainer {
   margin: 0px;
-  width: 500px;
+  width: auto;
 }
 
 div.xbar {
@@ -132,20 +132,20 @@ div.xbar {
   display: inline-block;
   border: 0px solid white;
   border-radius: 0px;
-  height: 1px;
+  height: 2px;
 }
 
 .bbox {
   display: inline-block;
   position: fixed;
-  top: 0px;
-  right: 12px;
+  bottom: 10px;
+  left: 10px;
 }
 
 .box {
   display: inline-block;
-  width: 8px;
-  height: 8px;
+  width: 11px;
+  height: 11px;
   margin: 0px 0px 0px 0px;
   border: 1px solid black;
   border-radius: 20%;
@@ -153,14 +153,12 @@ div.xbar {
 
 .bgreen {
   background: green;
-  height: 8px;
-  opacity: 80%;
+  opacity: 70%;
 }
 
 .borange {
   background: orange;
-  height: 6px;
-  opacity: 70%;
+  opacity: 60%;
 }
 
 .bblue {

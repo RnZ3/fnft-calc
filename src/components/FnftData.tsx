@@ -97,11 +97,6 @@ export const ContentMain = (props: any) => {
     setCoinI(coinsStale ? "box borange" : "box bgreen");
     setFnftI(fnftStale ? "box borange" : "box bgreen");
     setMetaI(metaStale ? "box borange" : "box bgreen");
-
-    console.log("------");
-    console.log("c:", coinI);
-    console.log("m:", metaI);
-    console.log("f:", fnftI);
   }, [
     metaUpdated,
     coinsUpdated,
@@ -271,32 +266,33 @@ export const ContentMain = (props: any) => {
     return (
       <>
         <div className="wrapper">
-          <p>
+          <div>
             fNFT ID:{" "}
             <span className={lqdrLocked === "locked" ? "orange" : "green"}>
               {fnftId}
             </span>{" "}
             ({lqdrLocked} {"->"} <span className="white">{lqdrTimeUTC}</span> (
-            {days} days))
+            {days} days)){" "}
             <small>
-              {" "}
               <span className={lqdrLocked === "locked" ? "orange" : "green"}>
                 <a href={appRevestUrl} target="_blank" rel="noreferrer">
-                  manage {fnftId} <ExtLink />
-                </a>{" "}
-              </span>{" "}
+                  manage
+                  <ExtLink />
+                </a>
+              </span>
             </small>
-          </p>
-          <p>
-            Smart Wallet Address:{" "}
-            <span className="white">
-              <a href={ftmscanUrl + smartWalletAddress}>{smartWalletAddress}</a>
-            </span>
-            {"  "}
-            <br />
-            created: <span className="white">{fnftCreateTime}</span>
-          </p>
-          <p>
+          </div>
+          <div className="xbarcontainer">
+            <div
+              className="xbar"
+              style={{ background: "#4dd9f6", width: links + "%" }}
+            ></div>
+            <div
+              className="xbar"
+              style={{ background: "#ffa800", width: rechts + "%" }}
+            ></div>
+          </div>
+          <div>
             LQDR Balance:
             <img className="icon-v" src={image} alt="linked from metadata" />
             <span className="lqdrblue">
@@ -311,18 +307,17 @@ export const ContentMain = (props: any) => {
               {xlqdrBalance}
             </span>{" "}
             <br />
-            <div className="xbarcontainer">
-              <div
-                className="xbar"
-                style={{ background: "#4dd9f6", width: links + "%" }}
-              ></div>
-              <div
-                className="xbar"
-                style={{ background: "#ffa800", width: rechts + "%" }}
-              ></div>
-            </div>
-          </p>
-          <p>Rewards available: {rewardsAvailable ? "" : "no"}</p>
+          </div>
+          <div>
+            Smart Wallet Address:{" "}
+            <span className="white">
+              <a href={ftmscanUrl + smartWalletAddress}>{smartWalletAddress}</a>
+            </span>
+            {"  "}
+            <br />
+            created: <span className="white">{fnftCreateTime}</span>
+          </div>
+          <div>Rewards available: {rewardsAvailable ? "" : "no"}</div>
           <div className={rewardsAvailable ? "" : "hidden"}>
             <table>
               <tbody>

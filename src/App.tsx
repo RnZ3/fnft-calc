@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useFetchLastFnftId } from "hooks/useFetchLastFnftId";
 import { ContentMain } from "components/FnftData";
 import { PaintSwap } from "components/PaintSwap";
 import { MyGlobalContext } from "context/context";
 import { Footer } from "components/Footer";
 
-const queryClient = new QueryClient();
+//const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { retry: 2 } },
+});
 
 export function App() {
   const [data, setData] = useState("");
@@ -78,7 +81,7 @@ export function App() {
             <PaintSwap />
             <Footer />
           </div>
-      <ReactQueryDevtools  />
+          <ReactQueryDevtools />
         </QueryClientProvider>
       </MyGlobalContext.Provider>
     </>
