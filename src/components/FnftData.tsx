@@ -267,7 +267,7 @@ export const ContentMain = (props: any) => {
       <>
         <div className="wrapper">
           <div className="wrapper2">
-            <p>
+            <div>
               fNFT ID:{" "}
               <span className={lqdrLocked === "locked" ? "orange" : "green"}>
                 {fnftId}
@@ -282,7 +282,7 @@ export const ContentMain = (props: any) => {
                   </a>
                 </span>
               </small>
-            </p>
+            </div>
             <div className="xbarcontainer">
               <div
                 className="xbar"
