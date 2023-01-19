@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { ChakraProvider } from "@chakra-ui/react";
+import { ColorModeScript } from "@chakra-ui/react";
+import theme from "styles/theme";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useFetchLastFnftId } from "hooks/useFetchLastFnftId";
@@ -6,8 +9,10 @@ import { ContentMain } from "components/FnftData";
 import { PaintSwap } from "components/PaintSwap";
 import { MyGlobalContext } from "context/context";
 import { Footer } from "components/Footer";
+import { Button, Input, Container, Box } from "@chakra-ui/react";
+import { Header } from "components/Header";
+//import "styles/styles.css";
 
-//const queryClient = new QueryClient();
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 2 } },
 });
@@ -39,51 +44,55 @@ export function App() {
     if (qid !== null && regex_digit.test(qid) && parseInt(qid) <= lastFnft) {
       setFnftId(qid);
     }
+    // eslint-disable-next-line
   }, [qid, lastFnft]);
 
   return (
     <>
-      <MyGlobalContext.Provider value={{ fnftId, setFnftId }}>
-        <QueryClientProvider client={queryClient}>
-          <h1>
-            <a
-              href="/"
-              onClick={() => {
-                window.location.reload();
-              }}
-            >
-              xLQDR fNFT Rewards Calculator
-            </a>
-          </h1>
-          <div className="container">
-            <form onSubmit={submitForm}>
-              <input
-                value={id}
-                onChange={(e) => setId(e.target.value)}
-                type="number"
-                max={lastFnft}
-                min="1"
-                step="1"
-                placeholder="fNFT ID"
-                className="input"
-              />{" "}
-              <button type="submit" className="btn">
-                Submit
-              </button>
-            </form>
-          </div>
-          <div>
-            <ContentMain
-              newId={data}
-              lastFnft={lastFnft}
-              submitBtn={submitBtn}
-            />
-            <PaintSwap />
-            <Footer />
-          </div>
-          <ReactQueryDevtools />
-        </QueryClientProvider>
-      </MyGlobalContext.Provider>
+      <ChakraProvider theme={theme}>
+        <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+        <MyGlobalContext.Provider value={{ fnftId, setFnftId }}>
+          <QueryClientProvider client={queryClient}>
+            <Container centerContent maxW="100%">
+              <Header />
+              <Box sx={{ marginBottom: "1rem" }}>
+                <form onSubmit={submitForm}>
+                  <Input
+                    value={id}
+                    onChange={(e) => setId(e.target.value)}
+                    type="number"
+                    max={lastFnft}
+                    min="1"
+                    step="1"
+                    placeholder="fNFT ID"
+                  />{" "}
+                  <Button
+                    sx={{
+                      background: "#CCC",
+                      color: "black",
+                      borderRadius: "5px",
+                      padding: "3px",
+                      fontSize: "0.8rem",
+                      fontWeight: "500",
+                    }}
+                    type="submit"
+                  >
+                    submit
+                  </Button>
+                </form>
+              </Box>
+              <ContentMain
+                newId={data}
+                lastFnft={lastFnft}
+                submitBtn={submitBtn}
+              />
+              <PaintSwap />
+              <Footer />
+            </Container>
+            <ReactQueryDevtools />
+          </QueryClientProvider>
+        </MyGlobalContext.Provider>
+      </ChakraProvider>
     </>
   );
 }

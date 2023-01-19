@@ -1,93 +1,70 @@
-import React, { useState, useEffect } from "react";
-import Spinner from "components/Spinner";
+import { useState } from "react";
 import { ExtLink } from "components/ExtLink";
 import { useGlobalContext } from "context/context";
+import {
+  Link,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Image,
+  Box,
+  Text,
+} from "@chakra-ui/react";
+import { usePswMeta, usePsw } from "hooks/useMyQueries";
 
 const psItemUrl = "https://paintswap.finance/marketplace/";
-const psSalesUrl =
-  "https://api.paintswap.finance/v2/sales?showUnverified=true&collections[0]=0xa6f5efc3499d41ff1eca9d325cfe13c913a85f45&version=2";
-var salesData: any[] = [];
 
-export function PaintSwap(props: any) {
+export function PaintSwap() {
+  var salesData: any[] = [];
   const { fnftId, setFnftId } = useGlobalContext();
-  const [error, setError] = useState(null);
-  const [metaLoaded, setMetaLoaded] = useState(false);
-  const [meta, setMeta] = useState([]);
   const [checkPs, setCheckPs] = useState(false);
-  const [saleLoaded, setSaleLoaded] = useState(false);
-  const [onsale, setOnsale] = useState([]);
 
-  const fuBar = async (apiRevestUrl: string) => {
-    const res = await fetch(apiRevestUrl, { redirect: "follow" });
-    res
-      .json()
-      .then((res) => setMeta(res))
-      .catch((err) => setError(err));
-  };
+  const {
+    data: pswData,
+    isSuccess: pswLoaded,
+  } = usePsw(checkPs);
 
-  const fetchPs = async () => {
-    const res = await fetch(psSalesUrl);
-    const json = await res.json();
-    setOnsale(json);
-    setSaleLoaded(true);
-  };
+  const pswMetaData = usePswMeta(pswData);
+
+  pswMetaData?.forEach((meta: any) => {
+    if (meta?.data?.properties.asset_name === "xLQDR") {
+      pswData?.sales?.forEach((ons: any) => {
+        if (meta.data.properties.id === ons.tokenId) {
+          //            console.log( meta.data.properties.asset_name, meta.data.properties.id, ons.id);
+          const data: any = {
+            psid: ons.id,
+            fnftid: ons.tokenId,
+            price: ons.price / 1000000000000000000,
+            endtime: ons.endTime,
+            isauction: ons.isAuction,
+            asset: meta.data.properties.asset_name,
+            image: meta.data.image,
+          };
+          salesData.push(data);
+          //            console.log(data);
+        }
+      });
+    }
+  });
+  //    console.log(salesData);
 
   function handlePs(e: string) {
     console.log(e, fnftId);
     setFnftId(e);
   }
 
-  const fetchMeta = async () => {
-    await Promise.all(
-      fnftOnsale.sales.map(async (ons: any) => {
-        const apiRevestUrl =
-          "https://api.revest.finance/metadata?id=" +
-          ons.tokenId +
-          "&chainId=250";
-
-        await fetch(apiRevestUrl || "")
-          .then((response) => {
-            return response.json();
-          })
-          .then((response) => {
-            const data: any = {
-              psid: ons.id,
-              fnftid: ons.tokenId,
-              price: ons.price / 1000000000000000000,
-              endtime: ons.endTime,
-              isauction: ons.isAuction,
-              asset: response.properties.asset_name,
-              image: response.image,
-            };
-            salesData.push(data);
-            //return data;
-          });
-      })
-    );
-    setMetaLoaded(true);
-  };
-
-  useEffect(() => {
-    if (checkPs && !saleLoaded) {
-      fetchPs();
-    }
-    if (checkPs && saleLoaded) {
-      fetchMeta();
-    }
-  }, [checkPs, saleLoaded]);
-
-  console.log(checkPs, saleLoaded, metaLoaded);
-
-  const fnftOnsale = JSON.parse(JSON.stringify(onsale));
   salesData.sort((a, b) => parseFloat(a.fnftid) - parseFloat(b.fnftid));
 
-  if (checkPs && (!saleLoaded || !metaLoaded)) {
+  if (checkPs && (!pswLoaded || !pswMetaData)) {
     return (
-      <div>
-        <p>Loading ... </p>
-      </div>
+      <Box>
+        <Text>Loading ... </Text>
+      </Box>
     );
-  } else if (checkPs && saleLoaded && metaLoaded) {
+  } else if (checkPs && pswMetaData) {
     var finalData = salesData.reduce(function (result, offer) {
       if (offer.asset === "xLQDR") {
         result.push(offer);
@@ -95,69 +72,74 @@ export function PaintSwap(props: any) {
       return result;
     }, []);
 
+    console.log(finalData);
+
     return (
       <>
-        <div>
-          <p>
-            currently <b>{finalData.length}</b> xLQDR fNFT offered on PaintSwap:
-          </p>
-          <div className={finalData.length > 0 ? "" : "hidden"}>
-            <table>
-              <tbody>
-                <tr className="tb">
-                  <td align="center" colSpan={2}>
+        <Box style={{ marginTop: "12px" }}>
+          <Text>
+            currently <Text as="b"> {finalData.length} </Text> xLQDR fNFT
+            offered on PaintSwap:
+          </Text>
+          <Box className={finalData.length > 0 ? "" : "hidden"}>
+            <Table>
+              <Thead>
+                <Tr className="tb">
+                  <Th align="center" colSpan={2}>
                     fNFT ID
-                  </td>
-                  <td align="right">Price</td>
-                  <td>Type</td>
-                  <td>End time</td>
-                  <td align="right">visit on PS</td>
-                </tr>
+                  </Th>
+                  <Th align="right">Price</Th>
+                  <Th>Type</Th>
+                  <Th>End time</Th>
+                  <Th align="right">visit on PS</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
                 {finalData.map((ps: any, i: number) => (
-                  <tr key={i}>
-                    <td>
-                      <img
-                        className="fnft"
-                        src={ps.image}
-                        height="53px"
-                        onClick={() => handlePs(ps.fnftid)}
-                      />
-                    </td>
-                    <td align="center">
+                  <Tr key={i}>
+                    <Td>
+                      <Box boxSize="6">
+                        <Image src={ps.image} />
+                      </Box>
+                    </Td>
+                    <Td align="center">
                       <button onClick={() => handlePs(ps.fnftid)}>
                         {ps.fnftid}
                       </button>
-                    </td>
-                    <td align="right">{ps.price} FTM</td>
-                    <td align="center">{ps.isauction ? "auction" : "sale"}</td>
-                    <td>{new Date(ps.endtime * 1000).toUTCString()}</td>
-                    <td align="right">
-                      <a
+                    </Td>
+                    <Td align="right">{ps.price} FTM</Td>
+                    <Td align="center">{ps.isauction ? "auction" : "sale"}</Td>
+                    <Td>{new Date(ps.endtime * 1000).toUTCString()}</Td>
+                    <Td align="right">
+                      <Link
                         href={psItemUrl + ps.psid}
                         target="_blank"
                         rel="noreferrer"
                       >
                         {ps.psid} <ExtLink />
-                      </a>
-                    </td>
-                  </tr>
+                      </Link>
+                    </Td>
+                  </Tr>
                 ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+              </Tbody>
+            </Table>
+          </Box>
+        </Box>
+        <Box style={{ margin: "2rem" }}>
+          <button onClick={() => setCheckPs(false)}>
+            hide PaintSwap offers
+          </button>
+        </Box>
       </>
     );
   } else {
     return (
       <>
-        <div>
-          <p>
-            <button onClick={() => setCheckPs(true)}>
-              check PaintSwap offers
-            </button>
-          </p>
-        </div>
+        <Box style={{ margin: "2rem" }}>
+          <button onClick={() => setCheckPs(true)}>
+            show PaintSwap offers
+          </button>
+        </Box>
       </>
     );
   }
