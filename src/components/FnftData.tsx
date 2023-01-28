@@ -28,6 +28,7 @@ var rewardsAvailable: boolean = false;
 var lqdrBalance: number = 0;
 var isXlqdr = { id: "", valid: false };
 var fnftList: string[] = [];
+var loadCoins: boolean = false;
 
 export const ContentMain = (props: any) => {
   const { fnftId, setFnftId } = useGlobalContext();
@@ -47,6 +48,7 @@ export const ContentMain = (props: any) => {
 
   if (fnftId) {
     appRevestUrl = "https://app.revest.finance/?chainId=250&id=" + fnftId;
+    loadCoins = true;
   }
 
   const {
@@ -59,7 +61,7 @@ export const ContentMain = (props: any) => {
     data: coinData,
     isLoading: coinsLoading,
     isStale: coinsStale,
-  } = useCoins(fnftId);
+  } = useCoins(loadCoins);
 
   const {
     data: metaData,
@@ -102,15 +104,13 @@ export const ContentMain = (props: any) => {
   if (error) {
     return <Box>Error: {error["message"]}</Box>;
   } else if (!fnftId) {
-const text = "Enter ID (1 - " + lastFnft  + ")"
+    const text = "Enter ID (1 - " + lastFnft + ")";
     return (
       <>
         <Recent list={fnftList} func={setFnftId} />
         <MsgBox text={text} />
       </>
     );
-
-
   }
   if (coinsLoading) {
     const text = "Loading coins ...";
@@ -367,90 +367,93 @@ const text = "Enter ID (1 - " + lastFnft  + ")"
               </Tbody>
             </Table>
           </Box>
-          <Box sx={{ marginTop: "12px" }}>
-            <Text>Rewards available: {rewardsAvailable ? "" : "no"}</Text>
-          </Box>
-          <Box borderBottom="1px dotted orange" paddingBottom="12px">
-            <Box
-              style={{
-                display: rewardsAvailable ? "" : "none",
-                marginTop: "12px",
-              }}
-            >
-              <Table>
-                <Thead>
-                  <Tr>
-                    <Th colSpan={2} align="center">
-                      Token
-                    </Th>
-                    <Th align="center">CG Id</Th>
-                    <Th align="right">Amount</Th>
-                    <Th align="right">$ Price</Th>
-                    <Th align="right">$ Value</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {finalData.map((r: any, i: number) => (
-                    <Tr key={i}>
-                      <Td>
-                        <Image
-                          boxSize="24px"
-                          src={r.image}
-                          alt="linked from metadata"
-                        />
-                      </Td>
-                      <Td>{r.token}</Td>
-                      <Td>{r.cgname}</Td>
-                      <Td
-                        align="right"
-                        style={{
-                          filter: fnftId && fnftStale ? "blur(0.7px)" : "",
-                        }}
-                      >
-                        {r.amount.toFixed(6)}
-                      </Td>
-                      <Td
-                        align="right"
-                        style={{
-                          filter: fnftId && coinsStale ? "blur(0.7px)" : "",
-                        }}
-                      >
-                        {r.price.toFixed(6)}
-                      </Td>
-                      <Td
-                        align="right"
-                        style={{
-                          filter: fnftId && coinsStale ? "blur(0.7px)" : "",
-                        }}
-                      >
-                        {r.value.toFixed(6)}
-                      </Td>
-                    </Tr>
-                  ))}
-                </Tbody>
-                <Thead style={{ padding: "4px" }}>
-                  <Tr>
-                    <Th colSpan={4}></Th>
-                    <Th>Total:</Th>
-                    <Th
-                      align="right"
-                      style={{
-                        filter: fnftId && coinsStale ? "blur(0.7px)" : "",
-                      }}
-                    >
-                      {total.toFixed(6)}
-                    </Th>
-                  </Tr>
-                </Thead>
-              </Table>
+          <Center>
+            <Box>
+              <Box sx={{ marginTop: "12px" }}>
+                <Text>Rewards available: {rewardsAvailable ? "" : "no"}</Text>
+              </Box>
+              <Box borderBottom="1px dotted orange" paddingBottom="12px">
+                <Box
+                  style={{
+                    display: rewardsAvailable ? "" : "none",
+                    marginTop: "12px",
+                  }}
+                >
+                  <Table>
+                    <Thead>
+                      <Tr>
+                        <Th colSpan={2} align="center">
+                          Token
+                        </Th>
+                        <Th align="center">CG Id</Th>
+                        <Th align="right">Amount</Th>
+                        <Th align="right">$ Price</Th>
+                        <Th align="right">$ Value</Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {finalData.map((r: any, i: number) => (
+                        <Tr key={i}>
+                          <Td>
+                            <Image
+                              boxSize="24px"
+                              src={r.image}
+                              alt="linked from metadata"
+                            />
+                          </Td>
+                          <Td>{r.token}</Td>
+                          <Td>{r.cgname}</Td>
+                          <Td
+                            align="right"
+                            style={{
+                              filter: fnftId && fnftStale ? "blur(0.7px)" : "",
+                            }}
+                          >
+                            {r.amount.toFixed(6)}
+                          </Td>
+                          <Td
+                            align="right"
+                            style={{
+                              filter: fnftId && coinsStale ? "blur(0.7px)" : "",
+                            }}
+                          >
+                            {r.price.toFixed(6)}
+                          </Td>
+                          <Td
+                            align="right"
+                            style={{
+                              filter: fnftId && coinsStale ? "blur(0.7px)" : "",
+                            }}
+                          >
+                            {r.value.toFixed(6)}
+                          </Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
+                    <Thead style={{ padding: "4px" }}>
+                      <Tr>
+                        <Th colSpan={4}></Th>
+                        <Th>Total:</Th>
+                        <Th
+                          align="right"
+                          style={{
+                            filter: fnftId && coinsStale ? "blur(0.7px)" : "",
+                          }}
+                        >
+                          {total.toFixed(6)}
+                        </Th>
+                      </Tr>
+                    </Thead>
+                  </Table>
+                </Box>
+              </Box>
             </Box>
-          </Box>
+          </Center>
         </Box>
       </>
     );
   }
 };
-
 
 /*
 //        <StatusBox props={indicators} />
@@ -487,5 +490,3 @@ const MakeStatusBox = (props: any) => {
   );
 };
 */
-
-

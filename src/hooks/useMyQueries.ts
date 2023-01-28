@@ -1,9 +1,10 @@
 import { useQuery, useQueries } from "@tanstack/react-query";
 
-const STALE_FNFT = 200000;
-const STALE_COINS = 200000;
+const STALE_FNFT = 180000;
+const STALE_COINS = 180000;
 const STALE_META = Infinity;
-const REFRESH_INTERVAL = 180000;
+const REFETCH_INTERVAL = 200000;
+const CACHE_TIME = Infinity;
 
 const revestUrlStart = "https://lambda.revest.finance/api/getUpdatedFNFT/";
 const revestUrlEnd = "-250";
@@ -29,19 +30,21 @@ export const useFnft = (fnftId: string) =>
   useQuery({
     queryKey: ["fnftData", fnftId],
     queryFn: () => fetchData(revestUrlStart + fnftId + revestUrlEnd),
-    refetchInterval: REFRESH_INTERVAL,
+    refetchInterval: REFETCH_INTERVAL,
     refetchIntervalInBackground: false,
     staleTime: STALE_FNFT,
+    cacheTime: CACHE_TIME,
     enabled: !!fnftId,
   });
 
-export const useCoins = (fnftId: string) =>
+export const useCoins = (enabled: boolean) =>
   useQuery({
-    queryKey: ["coinData", fnftId],
+    queryKey: ["coinData", enabled],
     queryFn: () => fetchData(cgUrl),
-    enabled: !!fnftId,
-    refetchInterval: REFRESH_INTERVAL,
+    enabled: !!enabled,
+    refetchInterval: REFETCH_INTERVAL,
     refetchIntervalInBackground: false,
+    cacheTime: CACHE_TIME,
     staleTime: STALE_COINS,
   });
 
@@ -50,8 +53,9 @@ export const useMeta = (fnftId: string) =>
     queryKey: ["metaData", fnftId],
     queryFn: () => fetchData(apiRevestStart + fnftId + apiRevestEnd),
     enabled: !!fnftId,
-    refetchInterval: REFRESH_INTERVAL,
+    refetchInterval: REFETCH_INTERVAL,
     refetchIntervalInBackground: false,
+    cacheTime: CACHE_TIME,
     staleTime: STALE_META,
   });
 
@@ -60,7 +64,7 @@ export const usePsw = (fnftId: boolean) =>
     queryKey: ["pswData", fnftId],
     queryFn: () => fetchData(psSalesUrl),
     enabled: !!fnftId,
-    refetchInterval: REFRESH_INTERVAL,
+    refetchInterval: REFETCH_INTERVAL,
     refetchIntervalInBackground: false,
     staleTime: STALE_COINS,
   });
@@ -70,7 +74,7 @@ export const usePswMeta1 = (pswData: any) =>
     queryKey: ["pswMeta", pswData],
     queryFn: () => fetchData(psSalesUrl),
     enabled: !!pswData,
-    refetchInterval: REFRESH_INTERVAL,
+    refetchInterval: REFETCH_INTERVAL,
     refetchIntervalInBackground: false,
     staleTime: STALE_COINS,
   });
@@ -104,7 +108,7 @@ export const useQ = (
     queryKey: [qName, URL],
     queryFn: () => fetchData(URL),
     enabled: !!fnftId,
-    refetchInterval: REFRESH_INTERVAL,
+    refetchInterval: REFETCH_INTERVAL,
     refetchIntervalInBackground: false,
     staleTime: stTime,
     cacheTime: chTime,
