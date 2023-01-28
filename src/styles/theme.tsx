@@ -66,7 +66,7 @@ const overrides = {
       button: {
         background: "#CCC",
         color: "black",
-        borderRadius: "5px",
+        borderRadius: "3px",
         padding: "3px",
         fontSize: "0.8rem",
         fontWeight: "600",

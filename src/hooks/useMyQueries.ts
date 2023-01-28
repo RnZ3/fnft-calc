@@ -1,9 +1,9 @@
 import { useQuery, useQueries } from "@tanstack/react-query";
 
-const STALE_FNFT = 60000;
-const STALE_COINS = 65000;
+const STALE_FNFT = 200000;
+const STALE_COINS = 200000;
 const STALE_META = Infinity;
-const REFRESH_INTERVAL = 120000;
+const REFRESH_INTERVAL = 180000;
 
 const revestUrlStart = "https://lambda.revest.finance/api/getUpdatedFNFT/";
 const revestUrlEnd = "-250";
@@ -76,7 +76,7 @@ export const usePswMeta1 = (pswData: any) =>
   });
 
 export const usePswMeta = (pswData: any) => {
- return useQueries({
+  return useQueries({
     queries: (pswData?.sales || []).map((onsale: any) => ({
       queryKey: ["pswSale", onsale.tokenId],
       queryFn: () =>
@@ -109,3 +109,16 @@ export const useQ = (
     staleTime: stTime,
     cacheTime: chTime,
   });
+
+/*
+=================== 
+  const {
+    data: coinData,
+    isSuccess: coinsLoaded,
+    isLoading: coinsLoading,
+    dataUpdatedAt: coinsUpdated,
+    isStale: coinsStale,
+    isFetching: coinsFetching,
+    isRefetching: coinsRefetching,
+  } = useQ("coinQ", cgUrl, fnftId, 60000, 60001);
+*/

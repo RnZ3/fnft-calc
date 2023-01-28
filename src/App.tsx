@@ -55,7 +55,7 @@ export function App() {
           <QueryClientProvider client={queryClient}>
             <Container centerContent maxW="100%">
               <Header />
-              <Box sx={{ marginBottom: "1rem" }}>
+              <Box sx={{ marginBottom: "12px" }}>
                 <form onSubmit={submitForm}>
                   <Input
                     value={id}
@@ -66,19 +66,7 @@ export function App() {
                     step="1"
                     placeholder="fNFT ID"
                   />{" "}
-                  <Button
-                    sx={{
-                      background: "#CCC",
-                      color: "black",
-                      borderRadius: "5px",
-                      padding: "3px",
-                      fontSize: "0.8rem",
-                      fontWeight: "500",
-                    }}
-                    type="submit"
-                  >
-                    submit
-                  </Button>
+                  <Button type="submit">submit</Button>
                 </form>
               </Box>
               <ContentMain

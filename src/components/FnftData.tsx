@@ -6,6 +6,7 @@ import { useMeta, useCoins, useFnft } from "hooks/useMyQueries";
 import { useEffect, useState } from "react";
 import {
   chakra,
+  Divider,
   Image,
   Box,
   Text,
@@ -16,19 +17,29 @@ import {
   Tr,
   Th,
   Td,
+  Center,
 } from "@chakra-ui/react";
+import { Recent } from "components/Recent";
+import { MsgBox } from "components/MsgBox";
+import { useLocalStorage } from "hooks/useLocalStorage";
 
 //const ftmscanUrl = "https://ftmscan.com/address/";
 var rewardsAvailable: boolean = false;
 var lqdrBalance: number = 0;
+var isXlqdr = { id: "", valid: false };
+var fnftList: string[] = [];
 
 export const ContentMain = (props: any) => {
-  const { fnftId } = useGlobalContext();
-  const [fnftList, setFnftList] = useState(["one"]);
+  const { fnftId, setFnftId } = useGlobalContext();
+  const [fnftListSt, setFnftListSt] = useLocalStorage<string>(
+    "fnftListSt",
+    "[]"
+  );
+
   let appRevestUrl: string = "";
   let lastFnft = props.lastFnft;
   const [error, setError] = useState(null);
-  const [ indicators, setIndicators] = useState({
+  const [indicators, setIndicators] = useState({
     fnft: "fnft",
     coins: "coins",
     meta: "meta",
@@ -56,31 +67,28 @@ export const ContentMain = (props: any) => {
     isStale: metaStale,
   } = useMeta(fnftId);
 
-  /* 
-=================== 
-  const {
-    data: coinData,
-    isSuccess: coinsLoaded,
-    isLoading: coinsLoading,
-    dataUpdatedAt: coinsUpdated,
-    isStale: coinsStale,
-    isFetching: coinsFetching,
-    isRefetching: coinsRefetching,
-  } = useQ("coinQ", cgUrl, fnftId, 60000, 60001);
-*/
+  fnftList = JSON.parse(fnftListSt);
+  console.log("listSt:", JSON.parse(fnftListSt), fnftList);
 
-  /*
   useEffect(() => {
-
-    setFnftList(fnftList => [...fnftList,fnftId])
-
-//setSearches(searches => [...searches, query]);
-//setList(list.concat(multiElements);
-
-  }, [fnftId,fnftLoaded]);
-
-console.log(fnftList)
-*/
+    if (isXlqdr.id !== "" && isXlqdr.valid) {
+      if (fnftList.length <= 6) {
+        setFnftListSt(
+          JSON.stringify(Array.from(new Set([...fnftList, isXlqdr.id])))
+        );
+      } else {
+        if (!fnftList.includes(isXlqdr.id)) {
+          const fnftList_shift = fnftList.shift();
+          setFnftListSt(
+            JSON.stringify(Array.from(new Set([...fnftList, isXlqdr.id])))
+          );
+          console.log(fnftList);
+        } else {
+          console.log("already known:", isXlqdr.id);
+        }
+      }
+    }
+  }, [isXlqdr]);
 
   useEffect(() => {
     setIndicators({
@@ -94,16 +102,42 @@ console.log(fnftList)
   if (error) {
     return <Box>Error: {error["message"]}</Box>;
   } else if (!fnftId) {
-    return <Box>Enter ID (1 - {lastFnft})</Box>;
+const text = "Enter ID (1 - " + lastFnft  + ")"
+    return (
+      <>
+        <Recent list={fnftList} func={setFnftId} />
+        <MsgBox text={text} />
+      </>
+    );
+
+
   }
   if (coinsLoading) {
-    return <MsgBox text="Loading coins ..." />;
+    const text = "Loading coins ...";
+    return (
+      <>
+        <Recent list={fnftList} func={setFnftId} />
+        <MsgBox text={text} />
+      </>
+    );
   }
   if (rewardsLoading) {
-    return <MsgBox text="Loading fNFT data ..." />;
+    const text = "Loading fNFT data ...";
+    return (
+      <>
+        <Recent list={fnftList} func={setFnftId} />
+        <MsgBox text={text} />
+      </>
+    );
   }
   if (metaLoading) {
-    return <MsgBox text="Loading metadata ..." />;
+    const text = "Loading metadata ...";
+    return (
+      <>
+        <Recent list={fnftList} func={setFnftId} />
+        <MsgBox text={text} />
+      </>
+    );
   } else {
     const fnftCreateTime = new Date(
       metaData?.properties.created * 1000
@@ -111,7 +145,13 @@ console.log(fnftList)
     if (!fnftData?.body.outputMetadata) {
       const text =
         "Error, no metadata found in " + fnftId + " - try different ID";
-      return <MsgBox text={text} />;
+      isXlqdr = { id: fnftId, valid: false };
+      return (
+        <>
+          <Recent list={fnftList} func={setFnftId} />
+          <MsgBox text={text} />
+        </>
+      );
     }
     if (
       !(
@@ -119,13 +159,19 @@ console.log(fnftList)
         "Revest Liquid Driver Integration"
       )
     ) {
+      isXlqdr = { id: fnftId, valid: false };
       const text =
         "Sorry, ID " +
         fnftId +
-        ": " +
+        " '" +
         fnftData?.body.outputMetadata.name +
-        " is not xLQDR - try different ID";
-      return <MsgBox text={text} />;
+        "' is not xLQDR - try different ID";
+      return (
+        <>
+          <Recent list={fnftList} func={setFnftId} />
+          <MsgBox text={text} />
+        </>
+      );
     }
     if (fnftData?.body.outputMetadata.front_display[0].value === true) {
       rewardsAvailable = true;
@@ -160,7 +206,7 @@ console.log(fnftList)
     const lqdrUSD = lqdrPrice * lqdrBalance;
     const lqdrFTM = lqdrUSD / ftmPrice;
     const rewards = fnftData?.body.outputMetadata.info_modal[1].value.map(
-      function mapper(line: any) {
+      function mapper(line: any, i: number) {
         if (typeof line == "string") {
           return line.split(" ");
         } else {
@@ -213,9 +259,13 @@ console.log(fnftList)
     });
     const barRight = xlqdrBalance / (lqdrBalance * 0.01);
     const barLeft = 100 - barRight;
+    if (!(isXlqdr.id === fnftId)) {
+      isXlqdr = { id: fnftId, valid: true };
+    }
     return (
       <>
-        <Box>
+        <Recent list={fnftList} func={setFnftId} />
+        <Box borderTop="1px dotted orange" paddingTop="12px">
           <Box>
             <Text fontSize="xl">
               fNFT ID:{" "}
@@ -320,78 +370,80 @@ console.log(fnftList)
           <Box sx={{ marginTop: "12px" }}>
             <Text>Rewards available: {rewardsAvailable ? "" : "no"}</Text>
           </Box>
-          <Box
-            style={{
-              display: rewardsAvailable ? "" : "none",
-              marginTop: "12px",
-            }}
-          >
-            <Table>
-              <Thead>
-                <Tr>
-                  <Th colSpan={2} align="center">
-                    Token
-                  </Th>
-                  <Th align="center">CG Id</Th>
-                  <Th align="right">Amount</Th>
-                  <Th align="right">$ Price</Th>
-                  <Th align="right">$ Value</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {finalData.map((r: any, i: number) => (
-                  <Tr key={i}>
-                    <Td>
-                      <Image
-                        boxSize="24px"
-                        src={r.image}
-                        alt="linked from metadata"
-                      />
-                    </Td>
-                    <Td>{r.token}</Td>
-                    <Td>{r.cgname}</Td>
-                    <Td
-                      align="right"
-                      style={{
-                        filter: fnftId && fnftStale ? "blur(0.7px)" : "",
-                      }}
-                    >
-                      {r.amount.toFixed(6)}
-                    </Td>
-                    <Td
-                      align="right"
-                      style={{
-                        filter: fnftId && coinsStale ? "blur(0.7px)" : "",
-                      }}
-                    >
-                      {r.price.toFixed(6)}
-                    </Td>
-                    <Td
-                      align="right"
-                      style={{
-                        filter: fnftId && coinsStale ? "blur(0.7px)" : "",
-                      }}
-                    >
-                      {r.value.toFixed(6)}
-                    </Td>
+          <Box borderBottom="1px dotted orange" paddingBottom="12px">
+            <Box
+              style={{
+                display: rewardsAvailable ? "" : "none",
+                marginTop: "12px",
+              }}
+            >
+              <Table>
+                <Thead>
+                  <Tr>
+                    <Th colSpan={2} align="center">
+                      Token
+                    </Th>
+                    <Th align="center">CG Id</Th>
+                    <Th align="right">Amount</Th>
+                    <Th align="right">$ Price</Th>
+                    <Th align="right">$ Value</Th>
                   </Tr>
-                ))}
-              </Tbody>
-              <Thead style={{ padding: "4px" }}>
-                <Tr>
-                  <Th colSpan={4}></Th>
-                  <Th>Total:</Th>
-                  <Th
-                    align="right"
-                    style={{
-                      filter: fnftId && coinsStale ? "blur(0.7px)" : "",
-                    }}
-                  >
-                    {total.toFixed(6)}
-                  </Th>
-                </Tr>
-              </Thead>
-            </Table>
+                </Thead>
+                <Tbody>
+                  {finalData.map((r: any, i: number) => (
+                    <Tr key={i}>
+                      <Td>
+                        <Image
+                          boxSize="24px"
+                          src={r.image}
+                          alt="linked from metadata"
+                        />
+                      </Td>
+                      <Td>{r.token}</Td>
+                      <Td>{r.cgname}</Td>
+                      <Td
+                        align="right"
+                        style={{
+                          filter: fnftId && fnftStale ? "blur(0.7px)" : "",
+                        }}
+                      >
+                        {r.amount.toFixed(6)}
+                      </Td>
+                      <Td
+                        align="right"
+                        style={{
+                          filter: fnftId && coinsStale ? "blur(0.7px)" : "",
+                        }}
+                      >
+                        {r.price.toFixed(6)}
+                      </Td>
+                      <Td
+                        align="right"
+                        style={{
+                          filter: fnftId && coinsStale ? "blur(0.7px)" : "",
+                        }}
+                      >
+                        {r.value.toFixed(6)}
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+                <Thead style={{ padding: "4px" }}>
+                  <Tr>
+                    <Th colSpan={4}></Th>
+                    <Th>Total:</Th>
+                    <Th
+                      align="right"
+                      style={{
+                        filter: fnftId && coinsStale ? "blur(0.7px)" : "",
+                      }}
+                    >
+                      {total.toFixed(6)}
+                    </Th>
+                  </Tr>
+                </Thead>
+              </Table>
+            </Box>
           </Box>
         </Box>
       </>
@@ -399,15 +451,6 @@ console.log(fnftList)
   }
 };
 
-const MsgBox = (props: any) => {
-  return (
-    <Box>
-      <Text fontSize="1.2rem" fontWeight="bold" color="red">
-        {props.text}
-      </Text>
-    </Box>
-  );
-};
 
 /*
 //        <StatusBox props={indicators} />
@@ -444,3 +487,5 @@ const MakeStatusBox = (props: any) => {
   );
 };
 */
+
+
