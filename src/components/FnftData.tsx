@@ -95,7 +95,8 @@ export const ContentMain = () => {
         }
       }
     }
-  }, [isXlqdr]);
+    //console.log("effect:", fnftList, isXlqdr.id);
+  });
 
   if (error) {
     return <Box>Error: {error["message"]}</Box>;
@@ -420,4 +421,3 @@ export const ContentMain = () => {
     );
   }
 };
-
