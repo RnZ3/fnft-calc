@@ -2,7 +2,7 @@ import { ExtLink } from "components/ExtLink";
 import priceMap from "components/glue.json";
 import { FinalArray, TokenData } from "components/interface";
 import { useGlobalContext } from "context/context";
-import { useMeta, useCoins, useFnft } from "hooks/useMyQueries";
+import { useLastFnftId, useMeta, useCoins, useFnft } from "hooks/useMyQueries";
 import { useEffect, useState } from "react";
 import {
   chakra,
@@ -19,7 +19,6 @@ import {
   Td,
   Center,
 } from "@chakra-ui/react";
-import { Recent } from "components/Recent";
 import { MsgBox } from "components/MsgBox";
 import { useLocalStorage } from "hooks/useLocalStorage";
 
@@ -27,18 +26,21 @@ import { useLocalStorage } from "hooks/useLocalStorage";
 var rewardsAvailable: boolean = false;
 var lqdrBalance: number = 0;
 var isXlqdr = { id: "", valid: false };
-var fnftList: string[] = [];
 var loadCoins: boolean = false;
 
-export const ContentMain = (props: any) => {
-  const { fnftId, setFnftId } = useGlobalContext();
+export const ContentMain = () => {
+  const { fnftId, setFnftId, idHistory, setIdHistory } = useGlobalContext();
   const [fnftListSt, setFnftListSt] = useLocalStorage<string>(
     "fnftListSt",
     "[]"
   );
 
+  useEffect(() => {
+    setIdHistory(fnftListSt);
+    //console.log("idHistory:", idHistory);
+  });
+
   let appRevestUrl: string = "";
-  let lastFnft = props.lastFnft;
   const [error, setError] = useState(null);
   const [indicators, setIndicators] = useState({
     fnft: "fnft",
@@ -52,9 +54,15 @@ export const ContentMain = (props: any) => {
   }
 
   const {
+    data: lastFnftId,
+    isLoading: lastFnftIdLoading,
+    isStale: lastFnftIdStale,
+  } = useLastFnftId();
+
+  const {
     data: fnftData,
-    isLoading: rewardsLoading,
-    isStale: fnftStale,
+    isLoading: fnftDataLoading,
+    isStale: fnftDataStale,
   } = useFnft(fnftId);
 
   const {
@@ -69,10 +77,8 @@ export const ContentMain = (props: any) => {
     isStale: metaStale,
   } = useMeta(fnftId);
 
-  fnftList = JSON.parse(fnftListSt);
-  console.log("listSt:", JSON.parse(fnftListSt), fnftList);
-
   useEffect(() => {
+    const fnftList = idHistory ? JSON.parse(idHistory) : [];
     if (isXlqdr.id !== "" && isXlqdr.valid) {
       if (fnftList.length <= 6) {
         setFnftListSt(
@@ -84,7 +90,6 @@ export const ContentMain = (props: any) => {
           setFnftListSt(
             JSON.stringify(Array.from(new Set([...fnftList, isXlqdr.id])))
           );
-          console.log(fnftList);
         } else {
           console.log("already known:", isXlqdr.id);
         }
@@ -92,66 +97,32 @@ export const ContentMain = (props: any) => {
     }
   }, [isXlqdr]);
 
-  useEffect(() => {
-    setIndicators({
-      fnft: fnftStale ? "orange" : "limegreen",
-      coins: coinsStale ? "orange" : "limegreen",
-      meta: metaStale ? "orange" : "limegreen",
-    });
-    //console.log(indicators);
-  }, [coinsStale, fnftStale, metaStale]);
-
   if (error) {
     return <Box>Error: {error["message"]}</Box>;
   } else if (!fnftId) {
-    const text = "Enter ID (1 - " + lastFnft + ")";
-    return (
-      <>
-        <Recent list={fnftList} func={setFnftId} />
-        <MsgBox text={text} />
-      </>
-    );
+    const text = "Enter ID (1 - " + lastFnftId + ")";
+    return <MsgBox text={text} />;
   }
   if (coinsLoading) {
     const text = "Loading coins ...";
-    return (
-      <>
-        <Recent list={fnftList} func={setFnftId} />
-        <MsgBox text={text} />
-      </>
-    );
+    return <MsgBox text={text} />;
   }
-  if (rewardsLoading) {
+  if (fnftDataLoading) {
     const text = "Loading fNFT data ...";
-    return (
-      <>
-        <Recent list={fnftList} func={setFnftId} />
-        <MsgBox text={text} />
-      </>
-    );
+    return <MsgBox text={text} />;
   }
   if (metaLoading) {
     const text = "Loading metadata ...";
-    return (
-      <>
-        <Recent list={fnftList} func={setFnftId} />
-        <MsgBox text={text} />
-      </>
-    );
+    return <MsgBox text={text} />;
   } else {
     const fnftCreateTime = new Date(
       metaData?.properties.created * 1000
     ).toUTCString();
     if (!fnftData?.body.outputMetadata) {
+      isXlqdr = { id: fnftId, valid: false };
       const text =
         "Error, no metadata found in " + fnftId + " - try different ID";
-      isXlqdr = { id: fnftId, valid: false };
-      return (
-        <>
-          <Recent list={fnftList} func={setFnftId} />
-          <MsgBox text={text} />
-        </>
-      );
+      return <MsgBox text={text} />;
     }
     if (
       !(
@@ -166,12 +137,7 @@ export const ContentMain = (props: any) => {
         " '" +
         fnftData?.body.outputMetadata.name +
         "' is not xLQDR - try different ID";
-      return (
-        <>
-          <Recent list={fnftList} func={setFnftId} />
-          <MsgBox text={text} />
-        </>
-      );
+      return <MsgBox text={text} />;
     }
     if (fnftData?.body.outputMetadata.front_display[0].value === true) {
       rewardsAvailable = true;
@@ -264,7 +230,6 @@ export const ContentMain = (props: any) => {
     }
     return (
       <>
-        <Recent list={fnftList} func={setFnftId} />
         <Box borderTop="1px dotted orange" paddingTop="12px">
           <Box>
             <Text fontSize="xl">
@@ -354,7 +319,7 @@ export const ContentMain = (props: any) => {
                   <Td
                     style={{
                       padding: "0px",
-                      filter: fnftId && fnftStale ? "blur(0.7px)" : "",
+                      filter: fnftId && fnftDataStale ? "blur(0.7px)" : "",
                     }}
                   >
                     <chakra.span
@@ -406,7 +371,8 @@ export const ContentMain = (props: any) => {
                           <Td
                             align="right"
                             style={{
-                              filter: fnftId && fnftStale ? "blur(0.7px)" : "",
+                              filter:
+                                fnftId && fnftDataStale ? "blur(0.7px)" : "",
                             }}
                           >
                             {r.amount.toFixed(6)}
@@ -455,38 +421,3 @@ export const ContentMain = (props: any) => {
   }
 };
 
-/*
-//        <StatusBox props={indicators} />
-const StatusBox = (props: any) => {
-  return (
-    <Box
-      sx={{
-        display: "inline-block",
-        position: "fixed",
-        top: "10px",
-        right: "10px",
-      }}
-    >
-      <MakeStatusBox item={props?.indicators?.fnft} />
-      <MakeStatusBox item={props?.indicators?.coins} />
-      <MakeStatusBox item={props?.indicators?.meta} />
-    </Box>
-  );
-};
-const MakeStatusBox = (props: any) => {
-  return (
-    <Box
-      sx={{
-        display: "inline-block",
-        width: "11px",
-        height: "11px",
-        margin: "0px 1px 0px 0px",
-        border: "1px solid #FFFFFF00",
-        borderRadius: "20%",
-        background: props.item,
-        opacity: "50%",
-      }}
-    ></Box>
-  );
-};
-*/

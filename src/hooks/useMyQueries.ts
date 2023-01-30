@@ -1,3 +1,6 @@
+import { ethers } from "ethers";
+import { fnft_address, fnft_abi } from "contracts/fnftContract";
+
 import { useQuery, useQueries } from "@tanstack/react-query";
 
 const STALE_FNFT = 180000;
@@ -25,6 +28,26 @@ async function fetchData(URL: string) {
   }
   return response.json();
 }
+
+const fetchLastFnftId = async () => {
+  const provider = new ethers.providers.JsonRpcProvider(
+    "https://rpc.ftm.tools"
+  );
+  const contract = new ethers.Contract(fnft_address, fnft_abi, provider);
+  const fnftsCreated = await contract.fnftsCreated();
+  return fnftsCreated - 1;
+};
+
+export const useLastFnftId = () =>
+  useQuery({
+    queryKey: ["lastFnft"],
+    queryFn: () => fetchLastFnftId(),
+    refetchInterval: 0,
+    refetchIntervalInBackground: false,
+    cacheTime: CACHE_TIME,
+    refetchOnWindowFocus: false,
+    placeholderData: 0,
+  });
 
 export const useFnft = (fnftId: string) =>
   useQuery({

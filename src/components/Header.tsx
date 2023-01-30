@@ -1,6 +1,6 @@
 import { chakra, Text } from "@chakra-ui/react";
 import { ColorModeSwitcher } from "components/ColorModeSwitcher";
-import { useFnft, useCoins, useMeta } from "hooks/useMyQueries";
+import { useFnft, useMeta } from "hooks/useMyQueries";
 import { useGlobalContext } from "context/context";
 
 export const Header = () => {

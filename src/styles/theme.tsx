@@ -53,7 +53,7 @@ const overrides = {
         color: "grey",
       },
       form: {
-        margin: "12px",
+        margin: "0",
       },
       input: {
         background: "whiteAlpha.900",
