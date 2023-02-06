@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { usePswMeta, usePsw } from "hooks/useMyQueries";
 
-const psItemUrl = "https://paintswap.finance/marketplace/";
+const psItemUrl = "https://paintswap.finance/marketplace/fantom/financial/"
 
 export function PaintSwap() {
   var salesData: any[] = [];
