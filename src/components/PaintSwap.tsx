@@ -89,10 +89,14 @@ export function PaintSwap() {
                       fNFT ID
                     </Th>
                     <Th align="right">Price</Th>
-                    <Hide below="md">
+
+                    <Hide below="sm">
                       <Th>Type</Th>
+                    </Hide>
+                    <Hide below="md">
                       <Th>End time</Th>
                     </Hide>
+
                     <Th align="right">visit on PS</Th>
                   </Tr>
                 </Thead>
@@ -110,12 +114,16 @@ export function PaintSwap() {
                         </button>
                       </Td>
                       <Td align="right">{ps.price} FTM</Td>
-                      <Hide below="md">
+
+                      <Hide below="sm">
                         <Td align="center">
                           {ps.isauction ? "auction" : "sale"}
                         </Td>
+                      </Hide>
+                      <Hide below="md">
                         <Td>{new Date(ps.endtime * 1000).toUTCString()}</Td>
                       </Hide>
+
                       <Td align="right">
                         <Link
                           href={psItemUrl + ps.psid}

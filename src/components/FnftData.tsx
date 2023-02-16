@@ -360,17 +360,21 @@ export const ContentMain = () => {
                         <Th colSpan={2} align="center">
                           Token
                         </Th>
+
                         <Hide below="md">
                           <Th align="center">CG Id</Th>
                         </Hide>
+
                         <Th align="right">Amount</Th>
-                        <Hide below="md">
+
+                        <Hide below="sm">
                           <Th align="right">$ Price</Th>
                         </Hide>
 
                         <Th align="right">$ Value</Th>
                       </Tr>
                     </Thead>
+
                     <Tbody>
                       {finalData.map((r: any, i: number) => (
                         <Tr key={i}>
@@ -382,9 +386,11 @@ export const ContentMain = () => {
                             />
                           </Td>
                           <Td>{r.token}</Td>
+
                           <Hide below="md">
                             <Td>{r.cgname}</Td>
                           </Hide>
+
                           <Td
                             align="right"
                             style={{
@@ -394,7 +400,8 @@ export const ContentMain = () => {
                           >
                             {r.amount.toFixed(6)}
                           </Td>
-                          <Hide below="md">
+
+                          <Hide below="sm">
                             <Td
                               align="right"
                               style={{
@@ -405,6 +412,7 @@ export const ContentMain = () => {
                               {r.price.toFixed(6)}
                             </Td>
                           </Hide>
+
                           <Td
                             align="right"
                             style={{
@@ -416,11 +424,17 @@ export const ContentMain = () => {
                         </Tr>
                       ))}
                     </Tbody>
+
                     <Thead style={{ padding: "4px" }}>
                       <Tr>
                         <Hide below="md">
-                          <Th colSpan={2}></Th>
+                          <Th></Th>
                         </Hide>
+
+                        <Hide below="sm">
+                          <Th></Th>
+                        </Hide>
+
                         <Th colSpan={2}></Th>
                         <Th>Total:</Th>
                         <Th
