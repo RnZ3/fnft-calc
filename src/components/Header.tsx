@@ -9,12 +9,21 @@ export const Header = () => {
   const { isStale: metaStale } = useMeta(fnftId);
 
   return (
-    <Text fontSize="2.3rem" fontWeight="bold" sx={{ marginTop: "1rem" }}>
+    <Text
+      overflowWrap="break-word"
+      fontSize={["1.9rem", "2.2rem"]}
+      fontWeight="bold"
+      sx={{ marginTop: "1rem" }}
+    >
       <chakra.span style={{ filter: fnftId && fnftStale ? "blur(1px)" : "" }}>
         <chakra.span style={{ filter: fnftId && metaStale ? "blur(1px)" : "" }}>
-            xLQDR fNFT Expl
+          xLQDR fNFT{" "}
+          <chakra.span style={{ whiteSpace: "nowrap" }}>
+            {" "}
+            Expl
             <ColorModeSwitcher />
             rer
+          </chakra.span>
         </chakra.span>
       </chakra.span>
     </Text>

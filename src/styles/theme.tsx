@@ -15,6 +15,9 @@ const overrides = {
   },
   styles: {
     global: (props: StyleFunctionProps) => ({
+      "*, *::before, ::after": {
+        overflowWrap: "anywhere",
+      },
       a: {
         color: props.colorMode === "dark" ? "teal.300" : "teal.500",
         _hover: {
@@ -23,7 +26,7 @@ const overrides = {
       },
       body: {
         fontFamily: "monospace",
-        fontSize: "1.1rem",
+        fontSize: ["0.8rem", "0.9rem", "1rem", "1.1rem", "1.2rem"],
         color: mode("#222", "#CCC")(props),
         background: mode("#EEE", "#222")(props),
       },

@@ -18,6 +18,9 @@ import {
   Th,
   Td,
   Center,
+  Show,
+  Hide,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { MsgBox } from "components/MsgBox";
 import { useLocalStorage } from "hooks/useLocalStorage";
@@ -34,6 +37,8 @@ export const ContentMain = () => {
     "fnftListSt",
     "[]"
   );
+
+  const lqdrColor = useColorModeValue("darkblue", "aqua");
 
   useEffect(() => {
     setIdHistory(fnftListSt);
@@ -231,9 +236,13 @@ export const ContentMain = () => {
     }
     return (
       <>
-        <Box borderTop="1px dotted orange" paddingTop="12px">
+        <Box
+          borderTop="1px dotted orange"
+          paddingTop="10px"
+          m={"0px 5px 0 5px"}
+        >
           <Box>
-            <Text fontSize="xl">
+            <Text fontSize={["1rem", null, null, null, "1.3rem"]}>
               fNFT ID:{" "}
               <chakra.span color={lqdrLocked === "locked" ? "orange" : "green"}>
                 {fnftId}
@@ -302,7 +311,7 @@ export const ContentMain = () => {
                     Balance:
                   </Td>
                   <Td style={{ padding: "0px 5px 0px 0px" }}>
-                    <chakra.span color="#4dd9f6">
+                    <chakra.span color={lqdrColor}>
                       {lqdrBalance === -1 ? "NaN" : lqdrBalance}{" "}
                     </chakra.span>
                     <chakra.span
@@ -351,9 +360,14 @@ export const ContentMain = () => {
                         <Th colSpan={2} align="center">
                           Token
                         </Th>
-                        <Th align="center">CG Id</Th>
+                        <Hide below="md">
+                          <Th align="center">CG Id</Th>
+                        </Hide>
                         <Th align="right">Amount</Th>
-                        <Th align="right">$ Price</Th>
+                        <Hide below="md">
+                          <Th align="right">$ Price</Th>
+                        </Hide>
+
                         <Th align="right">$ Value</Th>
                       </Tr>
                     </Thead>
@@ -368,7 +382,9 @@ export const ContentMain = () => {
                             />
                           </Td>
                           <Td>{r.token}</Td>
-                          <Td>{r.cgname}</Td>
+                          <Hide below="md">
+                            <Td>{r.cgname}</Td>
+                          </Hide>
                           <Td
                             align="right"
                             style={{
@@ -378,14 +394,17 @@ export const ContentMain = () => {
                           >
                             {r.amount.toFixed(6)}
                           </Td>
-                          <Td
-                            align="right"
-                            style={{
-                              filter: fnftId && coinsStale ? "blur(0.7px)" : "",
-                            }}
-                          >
-                            {r.price.toFixed(6)}
-                          </Td>
+                          <Hide below="md">
+                            <Td
+                              align="right"
+                              style={{
+                                filter:
+                                  fnftId && coinsStale ? "blur(0.7px)" : "",
+                              }}
+                            >
+                              {r.price.toFixed(6)}
+                            </Td>
+                          </Hide>
                           <Td
                             align="right"
                             style={{
@@ -399,7 +418,10 @@ export const ContentMain = () => {
                     </Tbody>
                     <Thead style={{ padding: "4px" }}>
                       <Tr>
-                        <Th colSpan={4}></Th>
+                        <Hide below="md">
+                          <Th colSpan={2}>2</Th>
+                        </Hide>
+                        <Th colSpan={2}>2</Th>
                         <Th>Total:</Th>
                         <Th
                           align="right"

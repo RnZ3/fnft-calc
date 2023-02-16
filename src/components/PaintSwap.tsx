@@ -12,20 +12,19 @@ import {
   Image,
   Box,
   Text,
+  Center,
+  Hide,
 } from "@chakra-ui/react";
 import { usePswMeta, usePsw } from "hooks/useMyQueries";
 
-const psItemUrl = "https://paintswap.finance/marketplace/fantom/financial/"
+const psItemUrl = "https://paintswap.finance/marketplace/fantom/financial/";
 
 export function PaintSwap() {
   var salesData: any[] = [];
   const { fnftId, setFnftId } = useGlobalContext();
   const [checkPs, setCheckPs] = useState(false);
 
-  const {
-    data: pswData,
-    isSuccess: pswLoaded,
-  } = usePsw(checkPs);
+  const { data: pswData, isSuccess: pswLoaded } = usePsw(checkPs);
 
   const pswMetaData = usePswMeta(pswData);
 
@@ -77,53 +76,61 @@ export function PaintSwap() {
     return (
       <>
         <Box style={{ marginTop: "12px" }}>
-          <Text>
+          <Text mb={4}>
             currently <Text as="b"> {finalData.length} </Text> xLQDR fNFT
             offered on PaintSwap:
           </Text>
-          <Box className={finalData.length > 0 ? "" : "hidden"}>
-            <Table>
-              <Thead>
-                <Tr className="tb">
-                  <Th align="center" colSpan={2}>
-                    fNFT ID
-                  </Th>
-                  <Th align="right">Price</Th>
-                  <Th>Type</Th>
-                  <Th>End time</Th>
-                  <Th align="right">visit on PS</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {finalData.map((ps: any, i: number) => (
-                  <Tr key={i}>
-                    <Td>
-                      <Box boxSize="6">
-                        <Image src={ps.image} />
-                      </Box>
-                    </Td>
-                    <Td align="center">
-                      <button onClick={() => handlePs(ps.fnftid)}>
-                        {ps.fnftid}
-                      </button>
-                    </Td>
-                    <Td align="right">{ps.price} FTM</Td>
-                    <Td align="center">{ps.isauction ? "auction" : "sale"}</Td>
-                    <Td>{new Date(ps.endtime * 1000).toUTCString()}</Td>
-                    <Td align="right">
-                      <Link
-                        href={psItemUrl + ps.psid}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        {ps.psid} <ExtLink />
-                      </Link>
-                    </Td>
+          <Center>
+            <Box className={finalData.length > 0 ? "" : "hidden"}>
+              <Table>
+                <Thead>
+                  <Tr className="tb">
+                    <Th align="center" colSpan={2}>
+                      fNFT ID
+                    </Th>
+                    <Th align="right">Price</Th>
+                    <Hide below="md">
+                      <Th>Type</Th>
+                      <Th>End time</Th>
+                    </Hide>
+                    <Th align="right">visit on PS</Th>
                   </Tr>
-                ))}
-              </Tbody>
-            </Table>
-          </Box>
+                </Thead>
+                <Tbody>
+                  {finalData.map((ps: any, i: number) => (
+                    <Tr key={i}>
+                      <Td>
+                        <Box boxSize="6">
+                          <Image src={ps.image} />
+                        </Box>
+                      </Td>
+                      <Td align="center">
+                        <button onClick={() => handlePs(ps.fnftid)}>
+                          {ps.fnftid}
+                        </button>
+                      </Td>
+                      <Td align="right">{ps.price} FTM</Td>
+                      <Hide below="md">
+                        <Td align="center">
+                          {ps.isauction ? "auction" : "sale"}
+                        </Td>
+                        <Td>{new Date(ps.endtime * 1000).toUTCString()}</Td>
+                      </Hide>
+                      <Td align="right">
+                        <Link
+                          href={psItemUrl + ps.psid}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {ps.psid} <ExtLink />
+                        </Link>
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </Box>
+          </Center>
         </Box>
         <Box style={{ margin: "2rem" }}>
           <button onClick={() => setCheckPs(false)}>
