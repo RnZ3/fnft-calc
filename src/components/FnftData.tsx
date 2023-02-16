@@ -419,9 +419,9 @@ export const ContentMain = () => {
                     <Thead style={{ padding: "4px" }}>
                       <Tr>
                         <Hide below="md">
-                          <Th colSpan={2}>2</Th>
+                          <Th colSpan={2}></Th>
                         </Hide>
-                        <Th colSpan={2}>2</Th>
+                        <Th colSpan={2}></Th>
                         <Th>Total:</Th>
                         <Th
                           align="right"
