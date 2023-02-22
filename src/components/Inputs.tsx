@@ -38,11 +38,15 @@ export function Inputs(): JSX.Element {
     <>
       <HStack margin="23px">
         <Box>
-          <Recent list={idHistory ? JSON.parse(idHistory) : []} func={setFnftId} />
+          <Recent
+            list={idHistory ? JSON.parse(idHistory) : []}
+            func={setFnftId}
+          />
         </Box>
-        <Box sx={{}}>
+        <Box sx={{}} textAlign="center">
           <form onSubmit={submitForm}>
             <Input
+              m={"2px 7px 2px 2px"}
               value={id}
               onChange={(e) => setId(e.target.value)}
               type="number"
@@ -51,7 +55,9 @@ export function Inputs(): JSX.Element {
               step="1"
               placeholder="fNFT ID"
             />{" "}
-            <Button type="submit">submit</Button>
+            <Button m={"2px 7px 2px 2px"} type="submit">
+              submit
+            </Button>
           </form>
         </Box>
       </HStack>

@@ -13,7 +13,7 @@ export const Header = () => {
       overflowWrap="break-word"
       fontSize={["1.9rem", "2.2rem"]}
       fontWeight="bold"
-      sx={{ marginTop: "1rem" }}
+      sx={{ marginTop: "1rem", textAlign: "center"}}
     >
       <chakra.span style={{ filter: fnftId && fnftStale ? "blur(1px)" : "" }}>
         <chakra.span style={{ filter: fnftId && metaStale ? "blur(1px)" : "" }}>

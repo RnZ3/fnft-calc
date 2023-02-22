@@ -1,157 +1,85 @@
 import { useState } from "react";
-import { ExtLink } from "components/ExtLink";
 import { useGlobalContext } from "context/context";
-import {
-  Link,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Image,
-  Box,
-  Text,
-  Center,
-  Hide,
-} from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
+import type { SalesData } from "types/interfaces";
 import { usePswMeta, usePsw } from "hooks/useMyQueries";
+import { PsTable } from "components/PsTable";
 
-const psItemUrl = "https://paintswap.finance/marketplace/fantom/financial/";
+//export const psItemUrl = "https://paintswap.finance/marketplace/fantom/financial/";
 
 export function PaintSwap() {
-  var salesData: any[] = [];
+  const { salesDataG } = useGlobalContext();
   const { fnftId, setFnftId } = useGlobalContext();
   const [checkPs, setCheckPs] = useState(false);
-
   const { data: pswData, isSuccess: pswLoaded } = usePsw(checkPs);
 
-  const pswMetaData = usePswMeta(pswData);
+  const pswMetaData = usePswMeta(pswLoaded, pswData);
 
-  pswMetaData?.forEach((meta: any) => {
-    if (meta?.data?.properties.asset_name === "xLQDR") {
-      pswData?.sales?.forEach((ons: any) => {
-        if (meta.data.properties.id === ons.tokenId) {
-          //            console.log( meta.data.properties.asset_name, meta.data.properties.id, ons.id);
-          const data: any = {
-            psid: ons.id,
-            fnftid: ons.tokenId,
-            price: ons.price / 1000000000000000000,
-            endtime: ons.endTime,
-            isauction: ons.isAuction,
-            asset: meta.data.properties.asset_name,
-            image: meta.data.image,
-          };
-          salesData.push(data);
-          //            console.log(data);
-        }
-      });
-    }
-  });
-  //    console.log(salesData);
-
-  function handlePs(e: string) {
-    console.log(e, fnftId);
-    setFnftId(e);
+  //console.log(pswMetaData.length)
+  salesDataG.length = 0;
+  if (pswMetaData && pswMetaData.length !== 0) {
+    pswMetaData?.forEach((meta: any, _index1: number): void => {
+      if (meta?.data?.properties.asset_name === "xLQDR") {
+        pswData?.sales?.forEach((ons: any, _index2: number) => {
+          //          console.log("map2", _index1, _index2);
+          if (meta.data.properties.id === ons.tokenId) {
+            //              console.log( meta.data.properties.asset_name, meta.data.properties.id, ons.id);
+            const data: SalesData = {
+              psid: ons.id,
+              fnftid: ons.tokenId,
+              price: ons.price / 1000000000000000000,
+              endtime: ons.endTime,
+              isauction: ons.isAuction,
+              asset: meta.data.properties.asset_name,
+              image: meta.data.image,
+            };
+            salesDataG.push(data);
+            console.log("push", data.fnftid);
+          }
+        });
+      }
+    });
   }
 
-  salesData.sort((a, b) => parseFloat(a.fnftid) - parseFloat(b.fnftid));
+  function handlePs(e: string): void {
+    scrollToTop();
+    console.log(e, fnftId);
+    setFnftId(e);
+    scrollToTop();
+  }
 
-  if (checkPs && (!pswLoaded || !pswMetaData)) {
+  if (checkPs && (!pswLoaded || !pswMetaData) && salesDataG.length !== 0) {
     return (
       <Box>
         <Text>Loading ... </Text>
       </Box>
     );
-  } else if (checkPs && pswMetaData) {
-    var finalData = salesData.reduce(function (result, offer) {
-      if (offer.asset === "xLQDR") {
-        result.push(offer);
-      }
-      return result;
-    }, []);
-
+  } else if (checkPs && pswMetaData && salesDataG) {
+    //console.log(salesDataG)
+    salesDataG.sort((a, b) => parseFloat(a.fnftid) - parseFloat(b.fnftid));
+    const finalData: SalesData[] = salesDataG.reduce(
+      (result: SalesData[], offer) => {
+        if (offer.asset === "xLQDR") {
+          result.push(offer);
+        }
+        return result;
+      },
+      []
+    );
     console.log(finalData);
 
     return (
-      <>
-        <Box style={{ marginTop: "12px" }}>
-          <Text mb={4}>
-            currently <Text as="b"> {finalData.length} </Text> xLQDR fNFT
-            offered on PaintSwap:
-          </Text>
-          <Center>
-            <Box className={finalData.length > 0 ? "" : "hidden"}>
-              <Table>
-                <Thead>
-                  <Tr className="tb">
-                    <Th align="center" colSpan={2}>
-                      fNFT ID
-                    </Th>
-                    <Th align="right">Price</Th>
-
-                    <Hide below="sm">
-                      <Th>Type</Th>
-                    </Hide>
-                    <Hide below="md">
-                      <Th>End time</Th>
-                    </Hide>
-
-                    <Th align="right">visit on PS</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {finalData.map((ps: any, i: number) => (
-                    <Tr key={i}>
-                      <Td>
-                        <Box boxSize="6">
-                          <Image src={ps.image} />
-                        </Box>
-                      </Td>
-                      <Td align="center">
-                        <button onClick={() => handlePs(ps.fnftid)}>
-                          {ps.fnftid}
-                        </button>
-                      </Td>
-                      <Td align="right">{ps.price} FTM</Td>
-
-                      <Hide below="sm">
-                        <Td align="center">
-                          {ps.isauction ? "auction" : "sale"}
-                        </Td>
-                      </Hide>
-                      <Hide below="md">
-                        <Td>{new Date(ps.endtime * 1000).toUTCString()}</Td>
-                      </Hide>
-
-                      <Td align="right">
-                        <Link
-                          href={psItemUrl + ps.psid}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          {ps.psid} <ExtLink />
-                        </Link>
-                      </Td>
-                    </Tr>
-                  ))}
-                </Tbody>
-              </Table>
-            </Box>
-          </Center>
-        </Box>
-        <Box style={{ margin: "2rem" }}>
-          <button onClick={() => setCheckPs(false)}>
-            hide PaintSwap offers
-          </button>
-        </Box>
-      </>
+      <PsTable
+        finalData={finalData}
+        handlePs={handlePs}
+        setCheckPs={setCheckPs}
+      />
     );
   } else {
     return (
       <>
-        <Box style={{ margin: "2rem" }}>
-          <button onClick={() => setCheckPs(true)}>
+        <Box m={6}>
+          <button onClick={() => setCheckPs(!checkPs)}>
             show PaintSwap offers
           </button>
         </Box>
@@ -159,3 +87,10 @@ export function PaintSwap() {
     );
   }
 }
+
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    //    behavior: "smooth",
+  });
+};

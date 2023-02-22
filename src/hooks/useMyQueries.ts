@@ -47,15 +47,16 @@ export const useLastFnftId = () =>
     cacheTime: CACHE_TIME,
     refetchOnWindowFocus: false,
     placeholderData: 0,
+staleTime:Infinity,
   });
 
 export const useFnft = (fnftId: string) =>
   useQuery({
     queryKey: ["fnftData", fnftId],
     queryFn: () => fetchData(revestUrlStart + fnftId + revestUrlEnd),
-    refetchInterval: REFETCH_INTERVAL,
+    refetchInterval: 60000,
     refetchIntervalInBackground: false,
-    staleTime: STALE_FNFT,
+    staleTime: 58000,
     cacheTime: CACHE_TIME,
     enabled: !!fnftId,
   });
@@ -102,7 +103,7 @@ export const usePswMeta1 = (pswData: any) =>
     staleTime: STALE_COINS,
   });
 
-export const usePswMeta = (pswData: any) => {
+export const usePswMeta = (pswl:boolean,pswData: any) => {
   return useQueries({
     queries: (pswData?.sales || []).map((onsale: any) => ({
       queryKey: ["pswSale", onsale.tokenId],
@@ -115,7 +116,7 @@ export const usePswMeta = (pswData: any) => {
       refetchInterval: 0,
       refetchIntervalInBackground: false,
       staleTime: STALE_META,
-      enabled: !!pswData,
+      enabled: !!pswl,
     })),
   });
 };

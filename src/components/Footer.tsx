@@ -3,13 +3,20 @@ import { ExternalLinkIcon } from "@chakra-ui/icons";
 
 export function Footer() {
   return (
-    <Container centerContent maxW="50%" sx={{  marginTop: "23px", borderTop: "1px dotted orange" }}>
+    <Container
+      centerContent
+      maxW="100%"
+      sx={{ borderTop: "1px dotted orange" }}
+    >
       <Center>
-        <Text fontSize="xs" align="center">
+        <Text
+          fontSize={["0.5rem", "0.6rem", "0.7rem", "0.8rem", "0.9rem"]}
+          align="center"
+        >
           NFA, DYOR -- thanks revest.finance, liquiddriver.finance,
           paintswap.finance, coingecko.com, vercel.com, github.com, ftm.tools --{" "}
           <Link href="https://github.com/RnZ3/fnft-calc">
-            source code <ExternalLinkIcon  w={3} h={3}/>
+            source code <ExternalLinkIcon w={3} h={3} />
           </Link>
         </Text>
       </Center>

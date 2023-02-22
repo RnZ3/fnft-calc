@@ -1,12 +1,11 @@
 import { ExtLink } from "components/ExtLink";
-import priceMap from "components/glue.json";
-import { FinalArray, TokenData } from "components/interface";
+import priceMap from "utils/glue.json";
+import { FinalArray, TokenData } from "types/interfaces";
 import { useGlobalContext } from "context/context";
 import { useLastFnftId, useMeta, useCoins, useFnft } from "hooks/useMyQueries";
 import { useEffect, useState } from "react";
 import {
   chakra,
-  Divider,
   Image,
   Box,
   Text,
@@ -18,31 +17,39 @@ import {
   Th,
   Td,
   Center,
-  Show,
   Hide,
   useColorModeValue,
+  Tooltip,
+  CircularProgress,
+  CircularProgressLabel,
+  HStack,
 } from "@chakra-ui/react";
 import { MsgBox } from "components/MsgBox";
 import { useLocalStorage } from "hooks/useLocalStorage";
+import { useQueryClient } from "@tanstack/react-query";
+import { PsRow } from "components/PsRow";
 
 //const ftmscanUrl = "https://ftmscan.com/address/";
-var rewardsAvailable: boolean = false;
-var lqdrBalance: number = 0;
-var isXlqdr = { id: "", valid: false };
-var loadCoins: boolean = false;
+let rewardsAvailable: boolean = false;
+let lqdrBalance: number = 0;
+let isXlqdr = { id: "", valid: false };
+let loadCoins: boolean = false;
 
 export const ContentMain = () => {
+  const lqdrColor = useColorModeValue("darkblue", "aqua");
+  const unlockColor = useColorModeValue("#128db3", "#4dd9f6");
+  const idBg = useColorModeValue("#dddddd", "#111111");
+  const queryClient = useQueryClient({});
+  const data = queryClient.getQueryData(["pswData", true]);
+  const { salesDataG } = useGlobalContext();
   const { fnftId, setFnftId, idHistory, setIdHistory } = useGlobalContext();
   const [fnftListSt, setFnftListSt] = useLocalStorage<string>(
     "fnftListSt",
     "[]"
   );
 
-  const lqdrColor = useColorModeValue("darkblue", "aqua");
-
   useEffect(() => {
     setIdHistory(fnftListSt);
-    //console.log("idHistory:", idHistory);
   });
 
   let appRevestUrl: string = "";
@@ -85,7 +92,7 @@ export const ContentMain = () => {
   useEffect(() => {
     const fnftList = idHistory ? JSON.parse(idHistory) : [];
     if (isXlqdr.id !== "" && isXlqdr.valid) {
-      if (fnftList.length <= 6) {
+      if (fnftList.length <= 7) {
         setFnftListSt(
           JSON.stringify(Array.from(new Set([...fnftList, isXlqdr.id])))
         );
@@ -96,11 +103,10 @@ export const ContentMain = () => {
             JSON.stringify(Array.from(new Set([...fnftList, isXlqdr.id])))
           );
         } else {
-          console.log("already known:", isXlqdr.id);
+          //console.log("already known:", isXlqdr.id);
         }
       }
     }
-    //console.log("effect:", fnftList, isXlqdr.id);
   });
 
   if (error) {
@@ -237,27 +243,49 @@ export const ContentMain = () => {
     return (
       <>
         <Box
-          borderTop="1px dotted orange"
+          borderTop="1px dotted #ed8936"
           paddingTop="10px"
           m={"0px 5px 0 5px"}
         >
-          <Box>
-            <Text fontSize={["1rem", null, null, null, "1.3rem"]}>
-              fNFT ID:{" "}
-              <chakra.span color={lqdrLocked === "locked" ? "orange" : "green"}>
-                {fnftId}
-              </chakra.span>{" "}
-              <small>
-                <chakra.span
-                  color={lqdrLocked === "locked" ? "orange" : "green"}
+          <Box bgColor={idBg} p={2} textAlign="center">
+            <HStack align="center" justify="center">
+              <Box>
+                <Text
+                  display="inline"
+                  fontSize={["1.2rem", null, null, null, "1.3rem"]}
                 >
-                  <Link href={appRevestUrl} target="_blank" rel="noreferrer">
-                    manage
-                    <ExtLink />
-                  </Link>
-                </chakra.span>
-              </small>
-            </Text>
+                  fNFT ID:{" "}
+                  <chakra.span
+                    fontWeight="bold"
+                    fontSize={[
+                      "1.3rem",
+                      "1.3rem",
+                      "1.4rem",
+                      "1.5rem",
+                      "1.6rem",
+                    ]}
+                    color={lqdrLocked === "locked" ? "#ed8936" : unlockColor}
+                  >
+                    {fnftId}
+                  </chakra.span>{" "}
+                </Text>
+              </Box>
+              <Box>
+                <small>
+                  <chakra.span
+                    fontSize="0.7rem"
+                    color={lqdrLocked === "locked" ? "#ed8936" : "#4dd9f6"}
+                  >
+                    <Link href={appRevestUrl} target="_blank" rel="noreferrer">
+                      manage
+                      <ExtLink />
+                    </Link>
+                  </chakra.span>
+                </small>
+              </Box>
+
+              {lockCircle(fnftDataStale, fnftDataLoading, barRight)}
+            </HStack>
           </Box>
           <Box>
             <Table width="100%">
@@ -277,47 +305,36 @@ export const ContentMain = () => {
                     {lqdrLocked} {"->"}
                   </Td>
                   <Td style={{ padding: "0px" }}>
-                    {lqdrTimeUTC} ({days} days){" "}
-                  </Td>
-                </Tr>
-                <Tr>
-                  <Td colSpan={2} style={{ padding: "0px" }}>
-                    <Box
-                      sx={{
-                        height: "3px",
-                        display: "flex",
-                        marginTop: "5px",
-                        marginBottom: "5px",
-                      }}
-                    >
-                      <Box
-                        sx={{ background: "#4dd9f6", width: barLeft + "%" }}
-                      ></Box>
-                      <Box
-                        sx={{ background: "#ffa800", width: barRight + "%" }}
-                      ></Box>
-                    </Box>
+                    {lqdrTimeUTC} ({days}&nbsp;days){" "}
                   </Td>
                 </Tr>
                 <Tr>
                   <Td style={{ padding: "0px 5px 0px 0px" }}>
                     LQDR{" "}
-                    <Image
-                      boxSize="25px"
-                      src={image}
-                      alt="linked from metadata"
-                      sx={{ display: "inline", verticalAlign: "bottom" }}
-                    />{" "}
+                    <Hide below="md">
+                      <Image
+                        boxSize="25px"
+                        src={image}
+                        alt="linked from metadata"
+                        sx={{ display: "inline", verticalAlign: "bottom" }}
+                      />{" "}
+                    </Hide>
                     Balance:
                   </Td>
                   <Td style={{ padding: "0px 5px 0px 0px" }}>
                     <chakra.span color={lqdrColor}>
-                      {lqdrBalance === -1 ? "NaN" : lqdrBalance}{" "}
+                      {lqdrBalance === -1
+                        ? "NaN"
+                        : parseFloat(
+                            lqdrBalance as unknown as string
+                          ).toLocaleString(undefined, {
+                            maximumFractionDigits: 2,
+                          })}{" "}
                     </chakra.span>
                     <chakra.span
                       style={{
                         display: lqdrBalance === -1 ? "hidden" : "",
-                        filter: fnftId && coinsStale ? "blur(0.7px)" : "",
+                        filter: fnftId && coinsStale ? "blur(0.4px)" : "",
                       }}
                     >
                       ($ {lqdrUSD.toFixed(2)}) ({lqdrFTM.toFixed(2)} FTM)
@@ -329,16 +346,21 @@ export const ContentMain = () => {
                   <Td
                     style={{
                       padding: "0px",
-                      filter: fnftId && fnftDataStale ? "blur(0.7px)" : "",
+                      filter: fnftId && fnftDataStale ? "blur(0.4px)" : "",
                     }}
                   >
                     <chakra.span
-                      color={lqdrLocked === "locked" ? "orange" : "hidden"}
+                      color={lqdrLocked === "locked" ? "#ed8936" : "hidden"}
                     >
                       {xlqdrBalance}
                     </chakra.span>
                   </Td>
                 </Tr>
+                <PsRow
+                  fnftId={fnftId}
+                  salesDataG={salesDataG}
+                  lqdrFTM={lqdrFTM}
+                />
               </Tbody>
             </Table>
           </Box>
@@ -347,7 +369,7 @@ export const ContentMain = () => {
               <Box sx={{ marginTop: "12px" }}>
                 <Text>Rewards available: {rewardsAvailable ? "" : "no"}</Text>
               </Box>
-              <Box borderBottom="1px dotted orange" paddingBottom="12px">
+              <Box borderBottom="1px dotted #ed8936" paddingBottom="12px">
                 <Box
                   style={{
                     display: rewardsAvailable ? "" : "none",
@@ -357,66 +379,61 @@ export const ContentMain = () => {
                   <Table>
                     <Thead>
                       <Tr>
-                        <Th colSpan={2} align="center">
-                          Token
-                        </Th>
+                        <Hide breakpoint="(max-width: 360px)">
+                          <Th></Th>
+                        </Hide>
+                        <Th align="left">Token</Th>
 
                         <Hide below="md">
                           <Th align="center">CG Id</Th>
                         </Hide>
-
                         <Th align="right">Amount</Th>
-
                         <Hide below="sm">
                           <Th align="right">$ Price</Th>
                         </Hide>
-
                         <Th align="right">$ Value</Th>
                       </Tr>
                     </Thead>
-
                     <Tbody>
                       {finalData.map((r: any, i: number) => (
                         <Tr key={i}>
-                          <Td>
-                            <Image
-                              boxSize="24px"
-                              src={r.image}
-                              alt="linked from metadata"
-                            />
-                          </Td>
+                          <Hide breakpoint="(max-width: 360px)">
+                            <Td>
+                              <Image
+                                boxSize="24px"
+                                src={r.image}
+                                alt="linked from metadata"
+                              />
+                            </Td>
+                          </Hide>
                           <Td>{r.token}</Td>
-
                           <Hide below="md">
                             <Td>{r.cgname}</Td>
                           </Hide>
-
                           <Td
                             align="right"
                             style={{
                               filter:
-                                fnftId && fnftDataStale ? "blur(0.7px)" : "",
+                                fnftId && fnftDataStale ? "blur(0.4px)" : "",
                             }}
                           >
                             {r.amount.toFixed(6)}
                           </Td>
-
                           <Hide below="sm">
                             <Td
                               align="right"
                               style={{
                                 filter:
-                                  fnftId && coinsStale ? "blur(0.7px)" : "",
+                                  fnftId && coinsStale ? "blur(0.4px)" : "",
                               }}
                             >
                               {r.price.toFixed(6)}
                             </Td>
                           </Hide>
-
                           <Td
                             align="right"
                             style={{
-                              filter: fnftId && coinsStale ? "blur(0.7px)" : "",
+                              filter: fnftId && coinsStale ? "blur(0.4px)" : "",
                             }}
                           >
                             {r.value.toFixed(6)}
@@ -424,23 +441,23 @@ export const ContentMain = () => {
                         </Tr>
                       ))}
                     </Tbody>
-
                     <Thead style={{ padding: "4px" }}>
                       <Tr>
+                        <Hide breakpoint="(max-width: 360px)">
+                          <Th></Th>
+                        </Hide>
                         <Hide below="md">
                           <Th></Th>
                         </Hide>
-
                         <Hide below="sm">
                           <Th></Th>
                         </Hide>
-
-                        <Th colSpan={2}></Th>
+                        <Th colSpan={1}></Th>
                         <Th>Total:</Th>
                         <Th
                           align="right"
                           style={{
-                            filter: fnftId && coinsStale ? "blur(0.7px)" : "",
+                            filter: fnftId && coinsStale ? "blur(0.4px)" : "",
                           }}
                         >
                           {total.toFixed(6)}
@@ -457,3 +474,39 @@ export const ContentMain = () => {
     );
   }
 };
+function lockCircle(
+  fnftDataStale: boolean,
+  fnftDataLoading: boolean,
+  barRight: number
+) {
+  return (
+    <Box>
+      <Tooltip placement="right" label="xLQDR lock ratio">
+        <Box display="inline">
+          {fnftDataStale || fnftDataLoading ? (
+            <CircularProgress
+              size="2.9rem"
+              value={barRight}
+              color="orange.400"
+              trackColor="#4dd9f6"
+              thickness="15px"
+              isIndeterminate
+            />
+          ) : (
+            <CircularProgress
+              size="2.9rem"
+              value={barRight}
+              color="orange.400"
+              trackColor="#4dd9f6"
+              thickness="15px"
+            >
+              <CircularProgressLabel>
+                {barRight.toFixed(0)}%
+              </CircularProgressLabel>
+            </CircularProgress>
+          )}
+        </Box>
+      </Tooltip>
+    </Box>
+  );
+}
