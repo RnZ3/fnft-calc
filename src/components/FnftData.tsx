@@ -244,7 +244,7 @@ export const ContentMain = () => {
     }
     return (
       <>
-        <Box paddingTop="10px" m={"0px 5px 0 5px"}>
+        <Box  m={"0px 5px 0 5px"} border="1px dotted orange">
           <Box bgColor={idBg} p={2} textAlign="center">
             <HStack align="center" justify="center">
               <Box>
@@ -367,7 +367,7 @@ export const ContentMain = () => {
               <Box sx={{ marginTop: "12px" }}>
                 <Text>Rewards available: {rewardsAvailable ? "" : "no"}</Text>
               </Box>
-              <Box paddingBottom="12px">
+              <Box paddingBottom="1px">
                 <Box
                   style={{
                     display: rewardsAvailable ? "" : "none",
