@@ -37,8 +37,6 @@ let isXlqdr = { id: "", valid: false };
 let loadCoins: boolean = false;
 
 export const ContentMain = () => {
-  console.log(colors[0].orange);
-
   const lqdrColor = useColorModeValue("lqblue.light", "lqblue.dark");
   const unlockColor = useColorModeValue("#128db3", "#4dd9f6");
   const idBg = useColorModeValue("#fefefe", "#111111");
