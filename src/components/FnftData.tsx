@@ -29,7 +29,6 @@ import { useLocalStorage } from "hooks/useLocalStorage";
 import { useQueryClient } from "@tanstack/react-query";
 import { PsRow } from "components/PsRow";
 import theme from "styles/theme";
-let colors = require("styles/colors.json");
 
 //const ftmscanUrl = "https://ftmscan.com/address/";
 let rewardsAvailable: boolean = false;
