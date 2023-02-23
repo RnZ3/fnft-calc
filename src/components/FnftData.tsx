@@ -28,6 +28,8 @@ import { MsgBox } from "components/MsgBox";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { useQueryClient } from "@tanstack/react-query";
 import { PsRow } from "components/PsRow";
+import theme from "styles/theme";
+let colors = require("styles/colors.json");
 
 //const ftmscanUrl = "https://ftmscan.com/address/";
 let rewardsAvailable: boolean = false;
@@ -36,9 +38,11 @@ let isXlqdr = { id: "", valid: false };
 let loadCoins: boolean = false;
 
 export const ContentMain = () => {
-  const lqdrColor = useColorModeValue("darkblue", "aqua");
+  console.log(colors[0].orange);
+
+  const lqdrColor = useColorModeValue("lqblue.light", "lqblue.dark");
   const unlockColor = useColorModeValue("#128db3", "#4dd9f6");
-  const idBg = useColorModeValue("#dddddd", "#111111");
+  const idBg = useColorModeValue("#fefefe", "#111111");
   const queryClient = useQueryClient({});
   const data = queryClient.getQueryData(["pswData", true]);
   const { salesDataG } = useGlobalContext();
@@ -74,6 +78,7 @@ export const ContentMain = () => {
   const {
     data: fnftData,
     isLoading: fnftDataLoading,
+    isRefetching: fnftDataFetching,
     isStale: fnftDataStale,
   } = useFnft(fnftId);
 
@@ -242,11 +247,7 @@ export const ContentMain = () => {
     }
     return (
       <>
-        <Box
-          borderTop="1px dotted #ed8936"
-          paddingTop="10px"
-          m={"0px 5px 0 5px"}
-        >
+        <Box paddingTop="10px" m={"0px 5px 0 5px"}>
           <Box bgColor={idBg} p={2} textAlign="center">
             <HStack align="center" justify="center">
               <Box>
@@ -264,7 +265,7 @@ export const ContentMain = () => {
                       "1.5rem",
                       "1.6rem",
                     ]}
-                    color={lqdrLocked === "locked" ? "#ed8936" : unlockColor}
+                    color={lqdrLocked === "locked" ? "f_orange" : unlockColor}
                   >
                     {fnftId}
                   </chakra.span>{" "}
@@ -284,11 +285,11 @@ export const ContentMain = () => {
                 </small>
               </Box>
 
-              {lockCircle(fnftDataStale, fnftDataLoading, barRight)}
+              {lockCircle(fnftDataStale, fnftDataFetching, barRight)}
             </HStack>
           </Box>
-          <Box>
-            <Table width="100%">
+          <Box p={4} background="back">
+            <Table width="100%" variant={"simple"}>
               <Tbody>
                 <Tr>
                   <Td style={{ padding: "0px 5px 0px 0px" }}>
@@ -322,7 +323,7 @@ export const ContentMain = () => {
                     Balance:
                   </Td>
                   <Td style={{ padding: "0px 5px 0px 0px" }}>
-                    <chakra.span color={lqdrColor}>
+                    <chakra.span color="lqdrblue2">
                       {lqdrBalance === -1
                         ? "NaN"
                         : parseFloat(
@@ -350,7 +351,7 @@ export const ContentMain = () => {
                     }}
                   >
                     <chakra.span
-                      color={lqdrLocked === "locked" ? "#ed8936" : "hidden"}
+                      color={lqdrLocked === "locked" ? "f_orange" : "hidden"}
                     >
                       {xlqdrBalance}
                     </chakra.span>
@@ -369,7 +370,7 @@ export const ContentMain = () => {
               <Box sx={{ marginTop: "12px" }}>
                 <Text>Rewards available: {rewardsAvailable ? "" : "no"}</Text>
               </Box>
-              <Box borderBottom="1px dotted #ed8936" paddingBottom="12px">
+              <Box paddingBottom="12px">
                 <Box
                   style={{
                     display: rewardsAvailable ? "" : "none",
@@ -476,19 +477,19 @@ export const ContentMain = () => {
 };
 function lockCircle(
   fnftDataStale: boolean,
-  fnftDataLoading: boolean,
+  fnftDataFetching: boolean,
   barRight: number
 ) {
   return (
     <Box>
       <Tooltip placement="right" label="xLQDR lock ratio">
         <Box display="inline">
-          {fnftDataStale || fnftDataLoading ? (
+          {fnftDataFetching ? (
             <CircularProgress
               size="2.9rem"
               value={barRight}
-              color="orange.400"
-              trackColor="#4dd9f6"
+              color="f_orange"
+              trackColor="f_blue"
               thickness="15px"
               isIndeterminate
             />
@@ -496,8 +497,8 @@ function lockCircle(
             <CircularProgress
               size="2.9rem"
               value={barRight}
-              color="orange.400"
-              trackColor="#4dd9f6"
+              color="f_orange"
+              trackColor="f_blue"
               thickness="15px"
             >
               <CircularProgressLabel>

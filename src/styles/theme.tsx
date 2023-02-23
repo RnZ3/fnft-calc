@@ -1,4 +1,4 @@
-import { extendTheme } from "@chakra-ui/react";
+import { extendTheme, useColorModeValue } from "@chakra-ui/react";
 import type { ThemeConfig } from "@chakra-ui/react";
 import { mode } from "@chakra-ui/theme-tools";
 import type { StyleFunctionProps } from "@chakra-ui/styled-system";
@@ -28,7 +28,7 @@ const overrides = {
         fontFamily: "monospace",
         fontSize: ["0.8rem", "0.9rem", "1rem", "1.1rem", "1.2rem"],
         color: mode("#222", "#CCC")(props),
-        background: mode("#EEE", "#222")(props),
+        background: mode("#DDD", "#333")(props),
       },
       table: {
         background: mode("#EEE", "#222")(props),
@@ -45,7 +45,7 @@ const overrides = {
         background: mode("whiteAlpha.900", "#222")(props),
       },
       th: {
-        background: mode("#dddddd", "#111111")(props),
+        background: mode("fbfbfb", "#111")(props),
         padding: "10px",
       },
       td: {
@@ -76,6 +76,28 @@ const overrides = {
       },
     }),
   },
+
+  colors: {
+    fnft: {
+      light: { green: "green", orange: "orange" },
+      dark: { green: "green", orange: "yellow" },
+      orange: { light: "green", dark: "yellow" },
+      lqblue: { light: "darkblue", dark: "aqua" },
+    },
+    lqblue: { light: "darkblue", dark: "aqua" },
+    f_orange: "#ed8936",
+    f_blue: "#4dd9f6",
+  },
+
+  semanticTokens: {
+    colors: {
+      fumpi: { default: "fnft.orange.light", _dark: "fnft.orange.dark" },
+      lqdrblue1: { default: "lqblue.light", _dark: "lqblue.dark" },
+      lqdrblue2: { default: "blue", _dark: "aqua" },
+      back: {default: "#eee", _dark: "#222"},
+    },
+  },
+
   components: () => ({
     Container: {
       variants: {

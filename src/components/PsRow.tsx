@@ -33,7 +33,7 @@ export function PsRow(props: PsRowProps): JSX.Element {
     <>
       {psData ? (
         <Tr>
-          <Td p={"0px 0px 0px 0px"}>For sale on PS:</Td>
+          <Td p={"0px 0px 0px 0px"}>Price on PS:</Td>
           <Td style={{ padding: "0px 0px 0px 0px" }}>
             {psData["price"]} FTM{" "}
             <chakra.span color={parseInt(wrac()) >= 0 ? wracColor : "red"}>
