@@ -244,7 +244,7 @@ export const ContentMain = () => {
     }
     return (
       <>
-        <Box  m={"0px 5px 0 5px"} border="1px dotted orange">
+        <Box  m={"0px 5px 0 5px"}>
           <Box bgColor={idBg} p={2} textAlign="center">
             <HStack align="center" justify="center">
               <Box>

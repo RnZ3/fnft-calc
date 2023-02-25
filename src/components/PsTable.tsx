@@ -26,8 +26,8 @@ export function PsTable(props: NF): JSX.Element {
           offered on PaintSwap:
         </Text>
         <Center>
-          <Box display={props.finalData.length > 0 ? "" : "hidden"} border="1px dotted orange">
-            <Table>
+          <Box display={props.finalData.length > 0 ? "" : "hidden"}>
+            <Table p={3}>
               <Thead>
                 <Tr>
                   <Th align="center" colSpan={2}>
