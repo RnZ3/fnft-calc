@@ -95,6 +95,8 @@ const overrides = {
       lqdrblue1: { default: "lqblue.light", _dark: "lqblue.dark" },
       lqdrblue2: { default: "blue", _dark: "aqua" },
       back: {default: "#eee", _dark: "#222"},
+      grad1: {default: "gray.300", _dark: "gray.600"},
+      grad2: {default: "gray.100", _dark: "gray.900"},
     },
   },
 

@@ -37,6 +37,7 @@ let isXlqdr = { id: "", valid: false };
 let loadCoins: boolean = false;
 
 export const ContentMain = () => {
+
   const lqdrColor = useColorModeValue("lqblue.light", "lqblue.dark");
   const unlockColor = useColorModeValue("#128db3", "#4dd9f6");
   const idBg = useColorModeValue("#fefefe", "#111111");
@@ -242,10 +243,12 @@ export const ContentMain = () => {
     if (!(isXlqdr.id === fnftId)) {
       isXlqdr = { id: fnftId, valid: true };
     }
+
+
     return (
       <>
         <Box  m={"0px 5px 0 5px"}>
-          <Box bgColor={idBg} p={2} textAlign="center">
+          <Box bgColor={idBg} p={2} textAlign="center" bgGradient='linear(to-r,grad1,grad2 ,grad1)'>
             <HStack align="center" justify="center">
               <Box>
                 <Text
