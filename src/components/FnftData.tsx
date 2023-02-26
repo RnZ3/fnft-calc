@@ -347,7 +347,7 @@ export const ContentMain = () => {
                     </chakra.span>
                   </Td>
                 </Tr>
-                <Tr>
+                <Tr display={xlqdrBalance > 0 ? "" : "none"}>
                   <Td style={{ padding: "0px 5px 0px 0px" }}>xLQDR Value: </Td>
                   <Td
                     style={{
