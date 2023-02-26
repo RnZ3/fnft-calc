@@ -1,4 +1,4 @@
-import { extendTheme, useColorModeValue } from "@chakra-ui/react";
+import { extendTheme } from "@chakra-ui/react";
 import type { ThemeConfig } from "@chakra-ui/react";
 import { mode } from "@chakra-ui/theme-tools";
 import type { StyleFunctionProps } from "@chakra-ui/styled-system";
@@ -90,9 +90,9 @@ const overrides = {
       fumpi: { default: "fnft.orange.light", _dark: "fnft.orange.dark" },
       lqdrblue1: { default: "lqblue.light", _dark: "lqblue.dark" },
       lqdrblue2: { default: "blue", _dark: "aqua" },
-      back: {default: "#eee", _dark: "#222"},
-      grad1: {default: "#EEE", _dark: "#222"},
-      grad2: {default: "#DDD", _dark: "#333"},
+      back: { default: "#eee", _dark: "#222" },
+      grad1: { default: "#EEE", _dark: "#222" },
+      grad2: { default: "#DDD", _dark: "#333" },
     },
   },
 

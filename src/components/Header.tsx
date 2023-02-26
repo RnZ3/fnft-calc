@@ -5,8 +5,8 @@ import { useGlobalContext } from "context/context";
 
 export const Header = () => {
   const { fnftId } = useGlobalContext();
-  const { isStale: fnftStale } = useFnft(fnftId);
-  const { isStale: metaStale } = useMeta(fnftId);
+  const { isStale: fnftStale } = useFnft(fnftId,undefined);
+  const { isStale: metaStale } = useMeta(fnftId,undefined);
 
   return (
     <Text

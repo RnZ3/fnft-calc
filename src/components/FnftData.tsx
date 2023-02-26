@@ -37,11 +37,13 @@ let isXlqdr = { id: "", valid: false };
 let loadCoins: boolean = false;
 
 export const ContentMain = () => {
+  let lqdrLocked = "";
   const lqdrColor = useColorModeValue("lqblue.light", "lqblue.dark");
   const unlockColor = useColorModeValue("#128db3", "#4dd9f6");
   const idBg = useColorModeValue("#fefefe", "#111111");
   const queryClient = useQueryClient({});
   const data = queryClient.getQueryData(["pswData", true]);
+  const [fetchEnabled, setFetchEnabled] = useState<boolean | undefined>(true);
   const { salesDataG } = useGlobalContext();
   const { fnftId, setFnftId, idHistory, setIdHistory } = useGlobalContext();
   const [fnftListSt, setFnftListSt] = useLocalStorage<string>(
@@ -51,6 +53,11 @@ export const ContentMain = () => {
 
   useEffect(() => {
     setIdHistory(fnftListSt);
+  });
+
+  useEffect(() => {
+    setFetchEnabled(!(lqdrLocked === "unlocked") ? true : false);
+    console.log(lqdrLocked, fetchEnabled);
   });
 
   let appRevestUrl: string = "";
@@ -77,19 +84,19 @@ export const ContentMain = () => {
     isLoading: fnftDataLoading,
     isRefetching: fnftDataFetching,
     isStale: fnftDataStale,
-  } = useFnft(fnftId);
+  } = useFnft(fnftId, fetchEnabled);
 
   const {
     data: coinData,
     isLoading: coinsLoading,
     isStale: coinsStale,
-  } = useCoins(loadCoins);
+  } = useCoins(loadCoins, fetchEnabled);
 
   const {
     data: metaData,
     isLoading: metaLoading,
     isStale: metaStale,
-  } = useMeta(fnftId);
+  } = useMeta(fnftId, fetchEnabled);
 
   useEffect(() => {
     const fnftList = idHistory ? JSON.parse(idHistory) : [];
@@ -167,7 +174,7 @@ export const ContentMain = () => {
     const smartWalletAddress = fnftData?.body.outputMetadata.info_modal[0].value
       ? fnftData?.body.outputMetadata.info_modal[0].value
       : "unkn";
-    const lqdrLocked = fnftData?.body.locked;
+    lqdrLocked = fnftData?.body.locked;
     const lqdrUnlockdate = fnftData?.body.unlockDate;
     const xlqdrBalance = fnftData?.body.value;
     const lqdrTimeUTC = new Date(lqdrUnlockdate * 1000).toUTCString();
@@ -363,7 +370,7 @@ export const ContentMain = () => {
               </Tbody>
             </Table>
           </Box>
-          <Box bgGradient="linear(to-b,grad1,grad2)" height="2rem"/>
+          <Box bgGradient="linear(to-b,grad1,grad2)" height="2rem" />
           <Center>
             <Box>
               <Box sx={{ marginTop: "12px" }}>

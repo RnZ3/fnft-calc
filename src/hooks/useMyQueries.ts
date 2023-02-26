@@ -50,7 +50,7 @@ export const useLastFnftId = () =>
     staleTime: Infinity,
   });
 
-export const useFnft = (fnftId: string) =>
+export const useFnft = (fnftId: string, rewards: boolean | undefined) =>
   useQuery({
     queryKey: ["fnftData", fnftId],
     queryFn: () => fetchData(revestUrlStart + fnftId + revestUrlEnd),
@@ -58,25 +58,25 @@ export const useFnft = (fnftId: string) =>
     refetchIntervalInBackground: false,
     staleTime: 60000,
     cacheTime: CACHE_TIME,
-    enabled: !!fnftId,
+    enabled: !!fnftId && !!rewards,
   });
 
-export const useCoins = (enabled: boolean) =>
+export const useCoins = (enabled1: boolean, enabled2: boolean | undefined) =>
   useQuery({
-    queryKey: ["coinData", enabled],
+    queryKey: ["coinData"],
     queryFn: () => fetchData(cgUrl),
-    enabled: !!enabled,
+    enabled: !!enabled1 && !!enabled2,
     refetchInterval: REFETCH_INTERVAL,
     refetchIntervalInBackground: false,
     cacheTime: CACHE_TIME,
     staleTime: STALE_COINS,
   });
 
-export const useMeta = (fnftId: string) =>
+export const useMeta = (fnftId: string, enabled: boolean | undefined) =>
   useQuery({
     queryKey: ["metaData", fnftId],
     queryFn: () => fetchData(apiRevestStart + fnftId + apiRevestEnd),
-    enabled: !!fnftId,
+    enabled: !!fnftId && !!enabled,
     refetchInterval: REFETCH_INTERVAL,
     refetchIntervalInBackground: false,
     cacheTime: CACHE_TIME,
