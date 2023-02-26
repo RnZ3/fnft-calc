@@ -41,11 +41,7 @@ const overrides = {
       tbody: {
         background: mode("whiteAlpha.900", "#222")(props),
       },
-      tr: {
-        background: mode("whiteAlpha.900", "#222")(props),
-      },
       th: {
-        background: mode("fbfbfb", "#111")(props),
         padding: "10px",
       },
       td: {
@@ -95,8 +91,8 @@ const overrides = {
       lqdrblue1: { default: "lqblue.light", _dark: "lqblue.dark" },
       lqdrblue2: { default: "blue", _dark: "aqua" },
       back: {default: "#eee", _dark: "#222"},
-      grad1: {default: "gray.300", _dark: "gray.600"},
-      grad2: {default: "gray.100", _dark: "gray.900"},
+      grad1: {default: "#EEE", _dark: "#222"},
+      grad2: {default: "#DDD", _dark: "#333"},
     },
   },
 

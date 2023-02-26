@@ -37,7 +37,6 @@ let isXlqdr = { id: "", valid: false };
 let loadCoins: boolean = false;
 
 export const ContentMain = () => {
-
   const lqdrColor = useColorModeValue("lqblue.light", "lqblue.dark");
   const unlockColor = useColorModeValue("#128db3", "#4dd9f6");
   const idBg = useColorModeValue("#fefefe", "#111111");
@@ -244,11 +243,10 @@ export const ContentMain = () => {
       isXlqdr = { id: fnftId, valid: true };
     }
 
-
     return (
       <>
-        <Box  m={"0px 5px 0 5px"}>
-          <Box bgColor={idBg} p={2} textAlign="center" bgGradient='linear(to-r,grad1,grad2 ,grad1)'>
+        <Box m={"0px 5px 0 5px"}>
+          <Box p={2} textAlign="center" bgGradient="linear(to-b,grad2 ,grad1)">
             <HStack align="center" justify="center">
               <Box>
                 <Text
@@ -365,6 +363,7 @@ export const ContentMain = () => {
               </Tbody>
             </Table>
           </Box>
+          <Box bgGradient="linear(to-b,grad1,grad2)" height="2rem"/>
           <Center>
             <Box>
               <Box sx={{ marginTop: "12px" }}>
@@ -378,7 +377,7 @@ export const ContentMain = () => {
                   }}
                 >
                   <Table>
-                    <Thead>
+                    <Thead bgGradient="linear(to-b,grad2,grad1)">
                       <Tr>
                         <Hide breakpoint="(max-width: 360px)">
                           <Th></Th>
@@ -442,8 +441,8 @@ export const ContentMain = () => {
                         </Tr>
                       ))}
                     </Tbody>
-                    <Thead style={{ padding: "4px" }}>
-                      <Tr>
+                    <Thead p={4} bgGradient="linear(to-b,grad1,grad2)">
+                      <Tr p={4}>
                         <Hide breakpoint="(max-width: 360px)">
                           <Th></Th>
                         </Hide>

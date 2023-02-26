@@ -28,7 +28,7 @@ export function PsTable(props: NF): JSX.Element {
         <Center>
           <Box display={props.finalData.length > 0 ? "" : "hidden"}>
             <Table p={3}>
-              <Thead>
+              <Thead bgGradient="linear(to-b,grad2 ,grad1)">
                 <Tr>
                   <Th align="center" colSpan={2}>
                     fNFT ID
@@ -78,6 +78,7 @@ export function PsTable(props: NF): JSX.Element {
                 ))}
               </Tbody>
             </Table>
+            <Box bgGradient="linear(to-b,grad1,grad2)" height="32px" />
           </Box>
         </Center>
       </Box>
