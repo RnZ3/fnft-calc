@@ -48,6 +48,5 @@ export interface TokenData {
 export interface NF {
   finalData: SalesData[];
   handlePs: (e: string) => void;
-  setCheckPs: (e: boolean) => void;
 }
 

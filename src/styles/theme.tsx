@@ -34,7 +34,6 @@ const overrides = {
         background: mode("#EEE", "#222")(props),
       },
       thead: {
-        background: mode("#999", "#000")(props),
         color: mode("#ed8936", "#ed8936")(props),
         fontWeight: "bold",
       },

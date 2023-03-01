@@ -10,16 +10,15 @@ interface SalesData {
   image: string;
 }
 
-
 export type GlobalContent = {
   fnftId: string;
   setFnftId: (c: string) => void;
   idHistory: string;
   setIdHistory: (c: string) => void;
-  fromPs: boolean;
+  fromPsX: boolean;
   setFromPs: (c: boolean) => void;
-salesDataG: SalesData[];
-setSalesDataG: (c: SalesData[]) => void;
+  salesDataG: SalesData[];
+  setSalesDataG: (c: SalesData[]) => void;
 };
 
 export const MyGlobalContext = createContext<GlobalContent>({
@@ -27,10 +26,10 @@ export const MyGlobalContext = createContext<GlobalContent>({
   setFnftId: () => {},
   idHistory: "",
   setIdHistory: () => {},
-  fromPs: false,
+  fromPsX: false,
   setFromPs: () => {},
-salesDataG: [],
-setSalesDataG: () => {},
+  salesDataG: [],
+  setSalesDataG: () => {},
 });
 
 export const useGlobalContext = () => useContext(MyGlobalContext);

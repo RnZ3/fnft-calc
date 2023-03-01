@@ -10,8 +10,8 @@ import { PsTable } from "components/PsTable";
 export function PaintSwap() {
   const { salesDataG } = useGlobalContext();
   const { fnftId, setFnftId } = useGlobalContext();
-  const [checkPs, setCheckPs] = useState(false);
-  const { data: pswData, isSuccess: pswLoaded } = usePsw(checkPs);
+  const [psEnabled, setPsEnabled] = useState(false);
+  const { data: pswData, isSuccess: pswLoaded } = usePsw(psEnabled);
 
   const pswMetaData = usePswMeta(pswLoaded, pswData);
 
@@ -47,45 +47,39 @@ export function PaintSwap() {
     setFnftId(e);
     scrollToTop();
   }
+  let finalData: SalesData[] = [];
 
-  if (checkPs && (!pswLoaded || !pswMetaData) && salesDataG.length !== 0) {
+  if (psEnabled && (!pswLoaded || !pswMetaData) && salesDataG.length !== 0) {
     return (
       <Box>
         <Text>Loading ... </Text>
       </Box>
     );
-  } else if (checkPs && pswMetaData && salesDataG) {
+  } else if (psEnabled && pswMetaData && salesDataG) {
     //console.log(salesDataG)
     salesDataG.sort((a, b) => parseFloat(a.fnftid) - parseFloat(b.fnftid));
-    const finalData: SalesData[] = salesDataG.reduce(
-      (result: SalesData[], offer) => {
-        if (offer.asset === "xLQDR") {
-          result.push(offer);
-        }
-        return result;
-      },
-      []
-    );
+    finalData = salesDataG.reduce((result: SalesData[], offer) => {
+      if (offer.asset === "xLQDR") {
+        result.push(offer);
+      }
+      return result;
+    }, []);
     console.log(finalData);
-
-    return (
-      <PsTable
-        finalData={finalData}
-        handlePs={handlePs}
-        setCheckPs={setCheckPs}
-      />
-    );
-  } else {
-    return (
-      <>
-        <Box m={6}>
-          <button onClick={() => setCheckPs(!checkPs)}>
-            show PaintSwap offers
-          </button>
-        </Box>
-      </>
-    );
   }
+  return (
+    <>
+      {psEnabled ? (
+        <PsTable finalData={finalData} handlePs={handlePs} />
+      ) : (
+        <></>
+      )}
+      <Box m={6}>
+        <button onClick={() => setPsEnabled(!psEnabled)}>
+          {psEnabled ? "hide" : "show"} PaintSwap offers
+        </button>
+      </Box>
+    </>
+  );
 }
 
 const scrollToTop = () => {

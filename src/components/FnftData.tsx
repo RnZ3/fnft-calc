@@ -1,5 +1,5 @@
 import { ExtLink } from "components/ExtLink";
-import priceMap from "utils/glue.json";
+import tokenMap from "utils/tokenmap.json";
 import { FinalArray, TokenData } from "types/interfaces";
 import { useGlobalContext } from "context/context";
 import { useLastFnftId, useMeta, useCoins, useFnft } from "hooks/useMyQueries";
@@ -19,9 +19,6 @@ import {
   Center,
   Hide,
   useColorModeValue,
-  Tooltip,
-  CircularProgress,
-  CircularProgressLabel,
   HStack,
 } from "@chakra-ui/react";
 import { MsgBox } from "components/MsgBox";
@@ -29,6 +26,7 @@ import { useLocalStorage } from "hooks/useLocalStorage";
 import { useQueryClient } from "@tanstack/react-query";
 import { PsRow } from "components/PsRow";
 import theme from "styles/theme";
+import { LockCircle } from "components/LockCircle";
 
 //const ftmscanUrl = "https://ftmscan.com/address/";
 let rewardsAvailable: boolean = false;
@@ -57,7 +55,7 @@ export const ContentMain = () => {
 
   useEffect(() => {
     setFetchEnabled(!(lqdrLocked === "unlocked") ? true : false);
-    console.log(lqdrLocked, fetchEnabled);
+    //console.log(lqdrLocked, fetchEnabled);
   });
 
   let appRevestUrl: string = "";
@@ -182,12 +180,12 @@ export const ContentMain = () => {
     const days = Math.floor((lqdrUnlockdate - tsNow) / 86400);
     var ftmPrice: number = 0;
     var lqdrPrice: number = 0;
-    coinData?.forEach(function (c: any) {
-      if (c.id === "wrapped-fantom") {
-        ftmPrice = c.current_price;
+    coinData?.forEach((coin: any) => {
+      if (coin.id === "wrapped-fantom") {
+        ftmPrice = coin.current_price;
       }
-      if (c.id === "liquiddriver") {
-        lqdrPrice = c.current_price;
+      if (coin.id === "liquiddriver") {
+        lqdrPrice = coin.current_price;
       }
     });
     const lqdrUSD = lqdrPrice * lqdrBalance;
@@ -208,8 +206,8 @@ export const ContentMain = () => {
     var token: string = "";
     const regex_amount = new RegExp("[0-9]");
     const regex_token = new RegExp("[\\[\\]]");
-    rewards?.forEach(function (x: any) {
-      x.forEach(function (v: string) {
+    rewards?.forEach((rew: any) => {
+      rew.forEach((v: string) => {
         if (regex_amount.test(v)) {
           amount = v;
           amount_n = +amount;
@@ -222,21 +220,21 @@ export const ContentMain = () => {
       tokenArray.push(data);
     });
     var finalData: FinalArray[] = [];
-    tokenArray.forEach(function (t) {
-      priceMap.forEach(function (m: any) {
-        if (t.token === m.rewardtoken) {
-          coinData?.forEach(function (c: any) {
-            if (c.id === m.cgname) {
-              if (!(t.amount === 0)) {
+    tokenArray.forEach((ta) => {
+      tokenMap.forEach((tm: any) => {
+        if (ta.token === tm.rewardtoken) {
+          coinData?.forEach((coin: any) => {
+            if (coin.id === tm.cgname) {
+              if (!(ta.amount === 0)) {
                 var data: FinalArray = {
-                  value: t.amount * c.current_price,
-                  token: t.token,
-                  cgname: m.cgname,
-                  amount: t.amount,
-                  price: c.current_price,
-                  image: c.image,
+                  value: ta.amount * coin.current_price,
+                  token: ta.token,
+                  cgname: tm.cgname,
+                  amount: ta.amount,
+                  price: coin.current_price,
+                  image: coin.image,
                 };
-                total += t.amount * c.current_price;
+                total += ta.amount * coin.current_price;
                 finalData.push(data);
               }
             }
@@ -289,8 +287,11 @@ export const ContentMain = () => {
                   </chakra.span>
                 </small>
               </Box>
-
-              {lockCircle(fnftDataStale, fnftDataFetching, barRight)}
+              <LockCircle
+                fnftDataStale={fnftDataStale}
+                fnftDataFetching={fnftDataFetching}
+                barRight={barRight}
+              />
             </HStack>
           </Box>
           <Box p={4} background="back">
@@ -481,39 +482,3 @@ export const ContentMain = () => {
     );
   }
 };
-function lockCircle(
-  fnftDataStale: boolean,
-  fnftDataFetching: boolean,
-  barRight: number
-) {
-  return (
-    <Box>
-      <Tooltip placement="right" label="xLQDR lock ratio">
-        <Box display="inline">
-          {fnftDataFetching ? (
-            <CircularProgress
-              size="2.9rem"
-              value={barRight}
-              color="f_orange"
-              trackColor="f_blue"
-              thickness="15px"
-              isIndeterminate
-            />
-          ) : (
-            <CircularProgress
-              size="2.9rem"
-              value={barRight}
-              color="f_orange"
-              trackColor="f_blue"
-              thickness="15px"
-            >
-              <CircularProgressLabel>
-                {barRight.toFixed(0)}%
-              </CircularProgressLabel>
-            </CircularProgress>
-          )}
-        </Box>
-      </Tooltip>
-    </Box>
-  );
-}

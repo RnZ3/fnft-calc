@@ -24,12 +24,22 @@ export function App() {
 
   const [salesDataG, setSalesDataG] = useState<SalesData[]>([]);
 
-
   return (
     <>
       <ChakraProvider theme={theme}>
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-        <MyGlobalContext.Provider value={{ fnftId, setFnftId, idHistory, setIdHistory, fromPs, setFromPs, salesDataG,setSalesDataG }}>
+        <MyGlobalContext.Provider
+          value={{
+            fnftId,
+            setFnftId,
+            idHistory,
+            setIdHistory,
+            fromPsX: fromPs,
+            setFromPs,
+            salesDataG,
+            setSalesDataG,
+          }}
+        >
           <QueryClientProvider client={queryClient}>
             <Container centerContent maxW="100%">
               <Header />

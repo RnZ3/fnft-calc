@@ -18,6 +18,7 @@ import type { NF } from "types/interfaces";
 const psItemUrl = "https://paintswap.finance/marketplace/fantom/financial/";
 
 export function PsTable(props: NF): JSX.Element {
+console.log(props)
   return (
     <>
       <Box mt={4}>
@@ -26,7 +27,7 @@ export function PsTable(props: NF): JSX.Element {
           offered on PaintSwap:
         </Text>
         <Center>
-          <Box display={props.finalData.length > 0 ? "" : "hidden"}>
+          <Box display={props.finalData.length > 0 ? "" : "none"}>
             <Table p={3}>
               <Thead bgGradient="linear(to-b,grad2 ,grad1)">
                 <Tr>
@@ -81,11 +82,6 @@ export function PsTable(props: NF): JSX.Element {
             <Box bgGradient="linear(to-b,grad1,grad2)" height="32px" />
           </Box>
         </Center>
-      </Box>
-      <Box m={6}>
-        <button onClick={() => props.setCheckPs(false)}>
-          hide PaintSwap offers
-        </button>
       </Box>
     </>
   );
